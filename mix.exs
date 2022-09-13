@@ -9,7 +9,10 @@ defmodule GloboTicket.Umbrella.MixProject do
       deps: deps(),
       dialyzer: dialyzer(),
       aliases: aliases(),
-      releases: releases(Mix.env())
+      releases: releases(Mix.env()),
+      preferred_cli_env: [
+        check: :test
+      ]
     ]
   end
 
@@ -27,7 +30,8 @@ defmodule GloboTicket.Umbrella.MixProject do
   defp aliases do
     [
       # run `mix setup` in all child apps
-      setup: ["cmd mix setup"]
+      setup: ["cmd mix setup"],
+      check: ["compile --warnings-as-errors", "credo --strict", "dialyzer"]
     ]
   end
 

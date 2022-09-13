@@ -1,3 +1,0 @@
-# GloboTicket
-
-**TODO: Add description**

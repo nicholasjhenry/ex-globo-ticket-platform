@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# script/format: Runs the formatter in the background.
+
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+if [ $# -ne 0 ] && [ "$1" == "watch" ]; then
+  if ! command -v watchman &> /dev/null; then
+    echo "ERROR: You must install 'watchman' to use this script."
+    exit 1
+  fi
+
+  watchman watch .
+  watchman -j <<- EOF
+  ["trigger", "./", "format", "**/*.ex", "**/*.exs", "**/*.default", "--", "mix", "format"]
+EOF
+else
+  mix format
+fi

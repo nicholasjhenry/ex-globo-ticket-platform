@@ -1,14 +1,5 @@
 import Config
 
-config :globo_ticket, GloboTicket.Repo,
-  username: "postgres",
-  password: "postgres",
-  hostname: "localhost",
-  database: "globo_ticket_dev",
-  stacktrace: true,
-  show_sensitive_data_on_connection_error: true,
-  pool_size: 10
-
 config :globo_ticket_web, GloboTicketWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4000],
   check_origin: false,

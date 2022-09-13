@@ -42,7 +42,9 @@ defmodule GloboTicket.MixProject do
   end
 
   defp project_deps do
-    []
+    [
+      {:utils, in_umbrella: true, only: :dev}
+    ]
   end
 
   defp aliases do

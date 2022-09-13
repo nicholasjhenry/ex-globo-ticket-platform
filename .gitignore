@@ -24,3 +24,6 @@ erl_crash.dump
 
 # Ignore development files
 .env
+
+# Allow flexibility for development dependencies
+Brewfile.lock.json

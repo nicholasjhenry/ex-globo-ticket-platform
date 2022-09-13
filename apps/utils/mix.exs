@@ -27,6 +27,8 @@ defmodule Utils.MixProject do
   end
 
   defp deps do
-    []
+    [
+      {:credo, "~> 1.6", only: [:dev, :test], runtime: false}
+    ]
   end
 end

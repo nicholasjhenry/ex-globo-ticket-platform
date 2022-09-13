@@ -1,0 +1,32 @@
+#!/bin/sh
+
+# script/build: Build the application for release.
+#
+# See: https://hexdocs.pm/phoenix/releases.html
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+: "${MIX_ENV:=staging}"
+
+if [ -n "$1" ]; then
+  # use first argument as an environment name. Use this to decide how to connect
+  # to the appropriate server.
+  if [ "$1" = "container" ]; then
+    echo "==> Building container release ($MIX_ENV)..."
+    docker image build --build-arg MIX_ENV=$MIX_ENV -t globo_mantics/globo_ticket-$MIX_ENV .
+  else
+    echo "==> Sorry, I don't know how to connect to the '$1' environment."
+    exit 1
+  fi
+else
+  echo "==> Building local release ($MIX_ENV)... "
+
+  mix deps.get --only prod
+  MIX_ENV=$MIX_ENV mix compile
+  MIX_ENV=$MIX_ENV mix cmd --app globo_ticket_web mix assets.deploy
+
+  mix cmd --app globo_ticket_web mix phx.digest
+  MIX_ENV=$MIX_ENV mix release
+fi

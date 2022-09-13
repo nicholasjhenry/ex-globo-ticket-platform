@@ -1,0 +1,31 @@
+#!/bin/sh
+
+# script/server: Launch the application and any extra required processes locally.
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+if [ -n "$1" ]; then
+  # use first argument as an environment name. Use this to decide how to connect
+  # to the appropriate server.
+  : "${MIX_ENV:=staging}"
+
+  if [ "$1" = "release" ]; then
+    echo "==> Running server as release ($MIX_ENV)..."
+    eval $(cat .env) && _build/$MIX_ENV/rel/globo_ticket/bin/globo_ticket start
+  elif [ "$1" = "container" ]; then
+    echo "==> Running server from container ($MIX_ENV)..."
+    docker container run --rm -it \
+      -p 127.0.0.1:4000:4000 \
+      --env-file .env \
+      -e DATABASE_URL=ecto://postgres:postgres@host.docker.internal/globo_ticket_dev \
+      --name globo_ticket globo_mantics/globo_ticket-$MIX_ENV \
+      bin/globo_ticket start
+  else
+    echo "==> Sorry, I don't know how to connect to the '$1' environment."
+    exit 1
+  fi
+else
+  iex -S mix phx.server
+fi

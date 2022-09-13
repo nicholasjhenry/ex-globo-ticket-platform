@@ -8,7 +8,8 @@ defmodule GloboTicket.Umbrella.MixProject do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       dialyzer: dialyzer(),
-      aliases: aliases()
+      aliases: aliases(),
+      releases: releases(Mix.env())
     ]
   end
 
@@ -29,4 +30,19 @@ defmodule GloboTicket.Umbrella.MixProject do
       setup: ["cmd mix setup"]
     ]
   end
+
+  defp releases(env) do
+    apps = env |> release_apps() |> Enum.map(&{&1, :permanent})
+
+    [
+      globo_ticket: [
+        include_executables_for: [:unix],
+        include_erts: true,
+        version: "0.0.0",
+        applications: apps
+      ]
+    ]
+  end
+
+  defp release_apps(_env), do: ~w(globo_ticket globo_ticket_web)a
 end

@@ -1,17 +1,3 @@
-# Find eligible builder and runner images on Docker Hub. We use Ubuntu/Debian instead of
-# Alpine to avoid DNS resolution issues in production.
-#
-# https://hub.docker.com/r/hexpm/elixir/tags?page=1&name=ubuntu
-# https://hub.docker.com/_/ubuntu?tab=tags
-#
-#
-# This file is based on these images:
-#
-#   - https://hub.docker.com/r/hexpm/elixir/tags - for the build image
-#   - https://hub.docker.com/_/debian?tab=tags&page=1&name=bullseye-20220801-slim - for the release image
-#   - https://pkgs.org/ - resource for finding needed packages
-#   - Ex: hexpm/elixir:1.14.0-erlang-25.0.4-debian-bullseye-20210902-slim
-#
 ARG ELIXIR_VERSION=1.14.0
 ARG OTP_VERSION=25.0.4
 ARG DEBIAN_VERSION=bullseye-20220801-slim
@@ -32,30 +18,34 @@ WORKDIR /app
 RUN mix local.hex --force && \
     mix local.rebar --force
 
+# Allow ENV to be overridden at built time
+ARG MIX_ENV
+
 # set build ENV
-ENV MIX_ENV="prod"
+ENV MIX_ENV="${MIX_ENV}"
 
 # install mix dependencies
 COPY mix.exs mix.lock ./
+COPY apps/globo_ticket/mix.exs apps/globo_ticket/
+COPY apps/globo_ticket_web/mix.exs apps/globo_ticket_web/
 RUN mix deps.get --only $MIX_ENV
 RUN mkdir config
 
-# copy compile-time config files before we compile dependencies
-# to ensure any relevant config change will trigger the dependencies
-# to be re-compiled.
-COPY config/config.exs config/${MIX_ENV}.exs config/
+COPY config/config.exs config/
+COPY config/globo_ticket/config.exs config/globo_ticket/${MIX_ENV}.exs config/globo_ticket/
+COPY config/globo_ticket_web/config.exs config/globo_ticket_web/${MIX_ENV}.exs config/globo_ticket_web/
 RUN mix deps.compile
 
-COPY priv priv
+# assets
+COPY apps/globo_ticket_web/priv apps/globo_ticket_web/priv
+COPY apps/globo_ticket_web/lib apps/globo_ticket_web/lib
+COPY apps/globo_ticket_web/assets apps/globo_ticket_web/assets
 
-COPY lib lib
-
-COPY assets assets
-
-# compile assets
-RUN mix assets.deploy
+RUN mix cmd --app globo_ticket_web mix assets.deploy
 
 # Compile the release
+COPY apps/globo_ticket/priv apps/globo_ticket/priv
+COPY apps/globo_ticket/lib apps/globo_ticket/lib
 RUN mix compile
 
 # Changes to config/runtime.exs don't require recompiling the code
@@ -81,11 +71,14 @@ ENV LC_ALL en_US.UTF-8
 WORKDIR "/app"
 RUN chown nobody /app
 
+# Allow ENV to be overridden at built time
+ARG MIX_ENV
+
 # set runner ENV
-ENV MIX_ENV="prod"
+ENV MIX_ENV="${MIX_ENV}"
 
 # Only copy the final release from the build stage
-COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/globo_ticket_web ./
+COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/globo_ticket ./
 
 USER nobody
 

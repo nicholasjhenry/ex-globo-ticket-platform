@@ -29,6 +29,10 @@ defmodule GloboTicketWeb.MixProject do
   defp elixirc_paths(_), do: ["lib"]
 
   defp deps do
+    phoenix_deps() ++ project_deps()
+  end
+
+  defp phoenix_deps do
     [
       {:phoenix, "~> 1.6.12"},
       {:phoenix_ecto, "~> 4.4"},
@@ -41,9 +45,14 @@ defmodule GloboTicketWeb.MixProject do
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.18"},
-      {:globo_ticket, in_umbrella: true},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"}
+    ]
+  end
+
+  defp project_deps do
+    [
+      {:globo_ticket, in_umbrella: true}
     ]
   end
 

@@ -28,6 +28,10 @@ defmodule GloboTicket.MixProject do
   defp elixirc_paths(_), do: ["lib"]
 
   defp deps do
+    phoenix_deps() ++ project_deps()
+  end
+
+  defp phoenix_deps do
     [
       {:phoenix_pubsub, "~> 2.0"},
       {:ecto_sql, "~> 3.6"},
@@ -35,6 +39,10 @@ defmodule GloboTicket.MixProject do
       {:jason, "~> 1.2"},
       {:swoosh, "~> 1.3"}
     ]
+  end
+
+  defp project_deps do
+    []
   end
 
   defp aliases do

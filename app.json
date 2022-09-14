@@ -1,0 +1,29 @@
+{
+  "name": "Globo Ticket",
+  "description": "An example of an immutable application.",
+  "website": "https://github.com/michaellperry/festify",
+  "stack": "container",
+  "success_url": "/",
+  "addons": ["heroku-postgresql:hobby-dev", "papertrail:choklad"],
+  "SETUP_BY": {
+    "description": "Who initiated this setup",
+    "value": "Nicholas Henry"
+  },
+  "env": {
+    "ENDPOINT_SECRET_KEY_BASE": {
+      "generator": "secret"
+    },
+    "HEROKU_APP_NAME": {
+      "required": true,
+      "description": "Copy the value entered in the first field *App name*"
+    }
+  },
+  "scripts": {
+    "postdeploy": "bin/setup_demo"
+  },
+  "environments": {
+    "review": {
+      "addons": ["heroku-postgresql:hobby-dev"]
+    }
+  }
+}

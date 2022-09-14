@@ -1,0 +1,22 @@
+setup:
+  # Automatically sets stack to container with (see prerequistes):
+  # $ heroku create your-app-name --manifest
+  #
+  # https://devcenter.heroku.com/articles/build-docker-images-heroku-yml#creating-your-app-from-setup
+  #
+  addons:
+    - plan: heroku-postgresql
+      as: DATABASE
+    - plan: papertrail
+      as: PAPERTRAIL
+build:
+  config:
+    MIX_ENV: staging
+  docker:
+    web: Dockerfile
+release:
+  image: web
+  command:
+    - bin/release
+run:
+  web: /app/bin/server

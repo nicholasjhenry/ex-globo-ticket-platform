@@ -30,6 +30,9 @@ unless config_env() in [:test] do
       url = System.get_env("ENDPOINT_URL") ->
         URI.parse(url)
 
+      app = System.get_env("HEROKU_APP_NAME") ->
+        URI.parse("https://#{app}.herokuapp.com")
+
       config_env() == :dev ->
         URI.parse("http://localhost:#{port}")
 

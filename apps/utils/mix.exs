@@ -11,7 +11,8 @@ defmodule Utils.MixProject do
       lockfile: "../../mix.lock",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      aliases: aliases()
     ]
   end
 
@@ -22,7 +23,10 @@ defmodule Utils.MixProject do
     ]
   end
 
-  # Run "mix help deps" to learn about dependencies.
+  defp aliases do
+    [setup: []]
+  end
+
   defp deps do
     [
       # {:dep_from_hexpm, "~> 0.3.0"},

@@ -1,0 +1,84 @@
+version: 2.1
+
+defaults: &defaults
+  working_directory: ~/repo
+  environment:
+    MIX_ENV: test
+
+aliases:
+  - &elixir_container
+    image: cimg/elixir:1.14.0
+  - &postgres_container
+    image: cimg/postgres:14.4
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: globo_ticket_test
+
+jobs:
+  build:
+    <<: *defaults
+    docker:
+      - *elixir_container
+    steps:
+      - checkout
+      - run: mix do local.hex --force, local.rebar --force
+      - restore_cache: # restore saved dependency cache
+          keys:
+            - v2-{{ checksum "Dockerfile" }}-{{ checksum "mix.lock" }}-dep-cache-{{ .Branch }}
+            - v2-{{ checksum "Dockerfile" }}-{{ checksum "mix.lock" }}-dep-cache
+      - restore_cache: # restores saved build cache
+          keys:
+            - v2-{{ checksum "Dockerfile" }}-{{ checksum "mix.lock" }}-build-and-mix-cache-{{ .Branch }}
+            - v2-{{ checksum "Dockerfile" }}-{{ checksum "mix.lock" }}-build-and-mix-cache
+      - run: mix do deps.get, compile --warnings-as-errors
+      - run:
+          name: "Dialyzer PLT"
+          command: mix dialyzer --plt
+          no_output_timeout: "20m"
+      - save_cache: # save dependencies to cache
+          key: v2-{{ checksum "Dockerfile" }}-{{ checksum "mix.lock" }}-dep-cache
+          paths: "deps"
+      - save_cache: # save dependencies to cache
+          key: v2-{{ checksum "Dockerfile" }}-{{ checksum "mix.lock" }}-dep-cache-{{ .Branch }}
+          paths: "deps"
+      - save_cache: # save build cache
+          key: v2-{{ checksum "Dockerfile" }}-{{ checksum "mix.lock" }}-build-and-mix-cache
+          paths:
+            - _build
+            - ~/.mix
+      - save_cache: # save build cache
+          key: v2-{{ checksum "Dockerfile" }}-{{ checksum "mix.lock" }}-build-and-mix-cache-{{ .Branch }}
+          paths:
+            - _build
+            - ~/.mix
+
+  test:
+    <<: *defaults
+    docker:
+      - *elixir_container
+      - *postgres_container
+    steps:
+      - checkout
+      - restore_cache: # restore saved dependency cache
+          keys:
+            - v2-{{ checksum "Dockerfile" }}-{{ checksum "mix.lock" }}-dep-cache-{{ .Branch }}
+            - v2-{{ checksum "Dockerfile" }}-{{ checksum "mix.lock" }}-dep-cache
+      - restore_cache: # restores saved build cache
+          keys:
+            - v2-{{ checksum "Dockerfile" }}-{{ checksum "mix.lock" }}-build-and-mix-cache-{{ .Branch }}
+            - v2-{{ checksum "Dockerfile" }}-{{ checksum "mix.lock" }}-build-and-mix-cache
+      - run: mix dialyzer
+      - run: mix hex.audit
+      - run: mix format --check-formatted
+      - run: mix ecto.migrate
+      - run: mix credo --strict
+      - run: mix test
+
+workflows:
+  build_and_test:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build

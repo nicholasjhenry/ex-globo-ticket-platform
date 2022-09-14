@@ -2,7 +2,7 @@ import Config
 
 # CONFIG: globo_ticket
 
-if config_env() in [:prod] do
+if config_env() in [:prod, :staging] do
   database_url =
     System.get_env("DATABASE_URL") ||
       raise """
@@ -44,7 +44,7 @@ unless config_env() in [:test] do
     url: endpoint |> Map.to_list() |> Keyword.take([:scheme, :host, :port])
 end
 
-if config_env() in [:prod] do
+if config_env() in [:prod, :staging] do
   secret_key_base =
     System.get_env("ENDPOINT_SECRET_KEY_BASE") ||
       raise """

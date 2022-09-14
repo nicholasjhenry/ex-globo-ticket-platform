@@ -27,6 +27,7 @@ ENV MIX_ENV="${MIX_ENV}"
 # install mix dependencies
 COPY mix.exs mix.lock ./
 COPY apps/globo_ticket/mix.exs apps/globo_ticket/
+COPY apps/globo_ticket_demo/mix.exs apps/globo_ticket_demo/
 COPY apps/globo_ticket_web/mix.exs apps/globo_ticket_web/
 RUN mix deps.get --only $MIX_ENV
 RUN mkdir config
@@ -46,6 +47,7 @@ RUN mix cmd --app globo_ticket_web mix assets.deploy
 # Compile the release
 COPY apps/globo_ticket/priv apps/globo_ticket/priv
 COPY apps/globo_ticket/lib apps/globo_ticket/lib
+COPY apps/globo_ticket_demo/lib apps/globo_ticket_demo/lib
 RUN mix compile
 
 # Changes to config/runtime.exs don't require recompiling the code

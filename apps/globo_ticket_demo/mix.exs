@@ -11,7 +11,8 @@ defmodule GloboTicketDemo.MixProject do
       lockfile: "../../mix.lock",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      aliases: aliases()
     ]
   end
 
@@ -21,7 +22,13 @@ defmodule GloboTicketDemo.MixProject do
     ]
   end
 
+  defp aliases do
+    [setup: []]
+  end
+
   defp deps do
-    []
+    [
+      {:globo_ticket, in_umbrella: true}
+    ]
   end
 end

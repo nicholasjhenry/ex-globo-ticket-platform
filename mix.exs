@@ -48,5 +48,6 @@ defmodule GloboTicket.Umbrella.MixProject do
     ]
   end
 
-  defp release_apps(_env), do: ~w(globo_ticket globo_ticket_web)a
+  defp release_apps(:prod), do: ~w(globo_ticket globo_ticket_web)a
+  defp release_apps(_env), do: ~w(globo_ticket globo_ticket_web globo_ticket_demo)a
 end

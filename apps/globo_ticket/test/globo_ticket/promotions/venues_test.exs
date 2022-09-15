@@ -7,4 +7,15 @@ defmodule GloboTicket.Promotions.VenuesTest do
     venues = Venues.VenueQueries.list_venues()
     assert Enum.empty?(venues)
   end
+
+  test "when venue added then a venue is returned" do
+    venue_uuid = Identifier.Uuid.Controls.Static.example()
+
+    venue_info = Venues.Controls.VenueInfo.example(name: "American Airlines Center")
+    result = Venues.VenueCommands.save_venue(venue_uuid, venue_info)
+
+    assert {:ok, _record} = result
+    venues = Venues.VenueQueries.list_venues()
+    assert Enum.any?(venues, &(&1.uuid == venue_uuid))
+  end
 end

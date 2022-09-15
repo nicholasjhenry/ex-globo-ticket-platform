@@ -8,6 +8,6 @@ defmodule GloboTicket.Promotions.Venues.VenueCommands do
   alias GloboTicket.Promotions.Venues
 
   def save_venue(uuid, _venue_info) do
-    Repo.insert(%Venues.Venue{uuid: uuid})
+    Repo.insert(%Venues.Venue{uuid: uuid}, on_conflict: :nothing, conflict_target: [:uuid])
   end
 end

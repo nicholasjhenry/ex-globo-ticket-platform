@@ -3,8 +3,11 @@ defmodule GloboTicket.Promotions.Venues.Venue do
 
   use GloboTicket.Schema
 
+  alias GloboTicket.Promotions.Venues
+
   schema "promotion_venues" do
     field :uuid, Ecto.UUID
+    has_many :descriptions, Venues.VenueDescription
 
     timestamps()
   end

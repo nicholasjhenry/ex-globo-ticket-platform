@@ -6,7 +6,8 @@ defmodule GloboTicket.Promotions.Venues.Controls.VenueInfo do
   def example(attrs) do
     defaults = %{
       uuid: Identifier.Uuid.Controls.Random.example(),
-      name: "American Airlines Center"
+      name: "American Airlines Center",
+      city: "Montreal"
     }
 
     attrs = Enum.into(attrs, defaults)

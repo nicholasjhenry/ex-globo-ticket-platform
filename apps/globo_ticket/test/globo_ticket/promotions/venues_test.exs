@@ -30,4 +30,14 @@ defmodule GloboTicket.Promotions.VenuesTest do
     venues = Venues.VenueQueries.list_venues()
     assert Enum.count(venues) == 1
   end
+
+  test "when set venue description then venue description is returned" do
+    venue_uuid = Identifier.Uuid.Controls.Static.example()
+
+    venue_info = Venues.Controls.VenueInfo.example(name: "American Airlines Center")
+    _result = Venues.VenueCommands.save_venue(venue_uuid, venue_info)
+
+    venue = Venues.VenueQueries.get_venue(venue_uuid)
+    assert venue.name == "American Airlines Center"
+  end
 end

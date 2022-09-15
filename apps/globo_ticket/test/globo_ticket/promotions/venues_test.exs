@@ -40,4 +40,17 @@ defmodule GloboTicket.Promotions.VenuesTest do
     venue = Venues.VenueQueries.get_venue(venue_uuid)
     assert venue.name == "American Airlines Center"
   end
+
+  test "when set venue description to the same description then nothing is saved" do
+    venue_uuid = Identifier.Uuid.Controls.Static.example()
+
+    venue_info = Venues.Controls.VenueInfo.example(name: "American Airlines Center")
+    _result = Venues.VenueCommands.save_venue(venue_uuid, venue_info)
+    first_snapshot = Venues.VenueQueries.get_venue(venue_uuid)
+
+    _result = Venues.VenueCommands.save_venue(venue_uuid, venue_info)
+    second_snapshot = Venues.VenueQueries.get_venue(venue_uuid)
+
+    assert second_snapshot.last_updated_ticks == first_snapshot.last_updated_ticks
+  end
 end

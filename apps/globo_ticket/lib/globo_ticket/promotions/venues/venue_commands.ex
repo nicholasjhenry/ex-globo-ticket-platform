@@ -13,11 +13,34 @@ defmodule GloboTicket.Promotions.Venues.VenueCommands do
              on_conflict: {:replace, [:uuid]},
              conflict_target: [:uuid]
            ) do
-      Repo.insert(%Venues.VenueDescription{
-        venue_id: venue.id,
-        name: venue_info.name,
-        city: venue_info.city
-      })
+      venue = Repo.preload(venue, description: most_recent(Venues.VenueDescription))
+
+      if description_equal?(venue_info, venue.description) do
+        {:ok, venue}
+      else
+        with {:ok, description} <-
+               Repo.insert(%Venues.VenueDescription{
+                 venue_id: venue.id,
+                 name: venue_info.name,
+                 city: venue_info.city
+               }) do
+          venue = %{venue | description: description}
+          {:ok, venue}
+        end
+      end
     end
+  end
+
+  defp description_equal?(venue_info, %Venues.VenueDescription{} = description) do
+    venue_info.name == description.name &&
+      venue_info.city == description.city
+  end
+
+  defp description_equal?(_venue_info, nil) do
+    false
+  end
+
+  defp most_recent(query) do
+    from query, order_by: [desc: :inserted_at], limit: 1
   end
 end

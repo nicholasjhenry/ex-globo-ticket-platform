@@ -31,11 +31,20 @@ defmodule GloboTicket.Promotions.Venues.VenueQueries do
     %Venues.VenueInfo{
       uuid: venue_record.uuid,
       name: description_record.name,
-      city: description_record.city
+      city: description_record.city,
+      last_updated_ticks: to_ticks(description_record.inserted_at)
     }
   end
 
   defp most_recent(query) do
     from query, order_by: [desc: :inserted_at], limit: 1
+  end
+
+  defp to_ticks(date_time) do
+    if date_time do
+      DateTime.to_gregorian_seconds(date_time)
+    else
+      {0, 0}
+    end
   end
 end

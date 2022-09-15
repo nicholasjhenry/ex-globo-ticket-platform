@@ -43,6 +43,7 @@ defmodule GloboTicket.MixProject do
 
   defp project_deps do
     [
+      {:typed_struct, "~> 0.3.0"},
       {:utils, in_umbrella: true, only: :dev}
     ]
   end

@@ -4,7 +4,7 @@ defmodule GloboTicket.Promotions.Venues.Controls.VenueInfo do
   alias Emu.Ticks
   alias GloboTicket.Promotions.Venues
 
-  def example(attrs) do
+  def example(attrs \\ %{}) do
     defaults = %{
       uuid: Identifier.Uuid.Controls.Random.example(),
       name: "American Airlines Center",

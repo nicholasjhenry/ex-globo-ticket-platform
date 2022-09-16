@@ -1,0 +1,29 @@
+<h1>Listing Venues</h1>
+
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>City</th>
+      <th>Location</th>
+      <th>Time Zone</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="venues">
+    <%= for venue <- @venues do %>
+      <tr id={"venue-#{venue.uuid}"}>
+        <td><%= venue.name %></td>
+        <td><%= venue.city %></td>
+        <td><%= venue.latitude %> - <%= venue.longitude %></td>
+        <td><%= venue.time_zone %></td>
+
+        <td>
+        TODO: Add actions
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

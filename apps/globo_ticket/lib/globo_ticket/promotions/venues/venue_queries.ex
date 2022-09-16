@@ -4,7 +4,6 @@ defmodule GloboTicket.Promotions.Venues.VenueQueries do
   """
 
   alias Emu.Snapshot
-  alias Emu.Ticks
   alias Emu.Tombstone
   alias GloboTicket.Promotions.Venues
 
@@ -15,7 +14,7 @@ defmodule GloboTicket.Promotions.Venues.VenueQueries do
     |> Tombstone.present()
     |> Repo.get_by(uuid: uuid)
     |> preload_venue()
-    |> to_venue_info()
+    |> Venues.VenueInfo.from_record()
   end
 
   def list_venues do
@@ -23,23 +22,10 @@ defmodule GloboTicket.Promotions.Venues.VenueQueries do
     |> Tombstone.present()
     |> Repo.all()
     |> preload_venue()
-    |> Enum.map(&to_venue_info/1)
+    |> Enum.map(&Venues.VenueInfo.from_record/1)
   end
 
   defp preload_venue(venue_or_venues) do
-    Repo.preload(venue_or_venues, descriptions: Snapshot.last_snapshot(Venues.VenueDescription))
-  end
-
-  defp to_venue_info(nil), do: nil
-
-  defp to_venue_info(venue_record) do
-    [description_record] = venue_record.descriptions
-
-    %Venues.VenueInfo{
-      uuid: venue_record.uuid,
-      name: description_record.name,
-      city: description_record.city,
-      last_updated_ticks: Ticks.from_date_time(description_record.inserted_at)
-    }
+    Repo.preload(venue_or_venues, description: Snapshot.last_snapshot(Venues.VenueDescription))
   end
 end

@@ -53,4 +53,30 @@ defmodule GloboTicket.Promotions.VenuesTest do
 
     assert second_snapshot.last_updated_ticks == first_snapshot.last_updated_ticks
   end
+
+  test "when venue is modified concurrently then exception is thrown" do
+    venue_uuid = Identifier.Uuid.Controls.Static.example()
+
+    venue_info = Venues.Controls.VenueInfo.example(name: "American Airlines Center")
+    _result = Venues.VenueCommands.save_venue(venue_uuid, venue_info)
+    venue = Venues.VenueQueries.get_venue(venue_uuid)
+
+    venue_info =
+      Venues.Controls.VenueInfo.example(
+        name: "Change 1",
+        last_updated_ticks: venue.last_updated_ticks
+      )
+
+    _result = Venues.VenueCommands.save_venue(venue_uuid, venue_info)
+
+    venue_info =
+      Venues.Controls.VenueInfo.example(
+        name: "Change 2",
+        last_updated_ticks: venue.last_updated_ticks
+      )
+
+    assert_raise Ecto.StaleEntryError, fn ->
+      Venues.VenueCommands.save_venue(venue_uuid, venue_info)
+    end
+  end
 end

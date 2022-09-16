@@ -5,6 +5,8 @@ defmodule GloboTicket.Promotions.Venues.VenueCommands do
 
   use GloboTicket.CommandHandler
 
+  alias Emu.Snapshot
+  alias Emu.Ticks
   alias GloboTicket.Promotions.Venues
 
   def save_venue(uuid, venue_info) do
@@ -13,14 +15,14 @@ defmodule GloboTicket.Promotions.Venues.VenueCommands do
              on_conflict: {:replace, [:uuid]},
              conflict_target: [:uuid]
            ) do
-      venue = Repo.preload(venue, description: most_recent(Venues.VenueDescription))
+      venue = Repo.preload(venue, description: Snapshot.last_snapshot(Venues.VenueDescription))
 
       if description_equal?(venue_info, venue.description) do
         {:ok, venue}
       else
         updated_ticks =
           if venue.description do
-            to_ticks(venue.description.inserted_at)
+            Ticks.from_date_time(venue.description.inserted_at)
           end
 
         if venue_info.last_updated_ticks != {0, 0} &&
@@ -56,17 +58,5 @@ defmodule GloboTicket.Promotions.Venues.VenueCommands do
 
   defp description_equal?(_venue_info, nil) do
     false
-  end
-
-  defp most_recent(query) do
-    from query, order_by: [desc: :inserted_at], limit: 1
-  end
-
-  defp to_ticks(date_time) do
-    if date_time do
-      DateTime.to_gregorian_seconds(date_time)
-    else
-      {0, 0}
-    end
   end
 end

@@ -13,18 +13,8 @@ defmodule GloboTicket.Promotions.Venues.VenueCommands do
 
     with {:ok, venue} <- Emu.Repo.save_entity_record(venue) do
       venue = preload_venue(venue)
-
-      description = %Venues.VenueDescription{
-        venue_id: venue.id,
-        name: venue_info.name,
-        city: venue_info.city
-      }
-
-      location = %Venues.VenueLocation{
-        venue_id: venue.id,
-        latitude: venue_info.latitude,
-        longitude: venue_info.longitude
-      }
+      description = Venues.VenueInfo.to_description_record(venue_info, venue)
+      location = Venues.VenueInfo.to_location_record(venue_info, venue)
 
       with {:ok, _} <- Emu.Repo.save_snapshot(venue_info, venue.description, description) do
         Emu.Repo.save_snapshot(venue_info, venue.location, location, :location_last_updated_ticks)

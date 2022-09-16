@@ -29,4 +29,20 @@ defmodule GloboTicket.Promotions.Venues.VenueInfo do
       location_last_updated_ticks: Ticks.from_date_time(record.location.inserted_at)
     }
   end
+
+  def to_description_record(venue_info, venue) do
+    %Venues.VenueDescription{
+      venue_id: venue.id,
+      name: venue_info.name,
+      city: venue_info.city
+    }
+  end
+
+  def to_location_record(venue_info, venue) do
+    %Venues.VenueLocation{
+      venue_id: venue.id,
+      latitude: venue_info.latitude,
+      longitude: venue_info.longitude
+    }
+  end
 end

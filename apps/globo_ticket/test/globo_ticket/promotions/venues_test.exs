@@ -91,6 +91,16 @@ defmodule GloboTicket.Promotions.VenuesTest do
     assert venue.longitude == -73.561668
   end
 
+  test "when set venue timezone then venue timezone is returned" do
+    venue_uuid = Identifier.Uuid.Controls.Static.example()
+
+    venue_info = Venues.Controls.VenueInfo.example(time_zone: "America/Toronto")
+    _result = Venues.VenueCommands.save_venue(venue_uuid, venue_info)
+
+    venue = Venues.VenueQueries.get_venue(venue_uuid)
+    assert venue.time_zone == "America/Toronto"
+  end
+
   test "when venue deleted venue is not returned" do
     venue_uuid = Identifier.Uuid.Controls.Static.example()
 

@@ -9,6 +9,7 @@ defmodule GloboTicket.Promotions.Venues.Venue do
     field :uuid, Ecto.UUID
     has_one :description, Venues.VenueDescription
     has_one :location, Venues.VenueLocation
+    has_one :time_zone, Venues.VenueTimeZone
     has_one :removed, Venues.VenueRemoved
 
     timestamps()

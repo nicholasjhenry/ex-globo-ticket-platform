@@ -15,9 +15,24 @@ defmodule GloboTicket.Promotions.Venues.VenueCommands do
       venue = preload_venue(venue)
       description = Venues.VenueInfo.to_description_record(venue_info, venue)
       location = Venues.VenueInfo.to_location_record(venue_info, venue)
+      time_zone = Venues.VenueInfo.to_time_zone_record(venue_info, venue)
 
-      with {:ok, _} <- Emu.Repo.save_snapshot(venue_info, venue.description, description) do
-        Emu.Repo.save_snapshot(venue_info, venue.location, location, :location_last_updated_ticks)
+      with {:ok, _} <- Emu.Repo.save_snapshot(venue_info, venue.description, description),
+           {:ok, _} <-
+             Emu.Repo.save_snapshot(
+               venue_info,
+               venue.location,
+               location,
+               :location_last_updated_ticks
+             ),
+           {:ok, _} <-
+             Emu.Repo.save_snapshot(
+               venue_info,
+               venue.time_zone,
+               time_zone,
+               :time_zone_last_updated_ticks
+             ) do
+        {:ok, venue_info}
       end
     end
   end
@@ -30,7 +45,8 @@ defmodule GloboTicket.Promotions.Venues.VenueCommands do
   defp preload_venue(venue_or_venues) do
     Repo.preload(venue_or_venues,
       description: Snapshot.last_snapshot(Venues.VenueDescription),
-      location: Snapshot.last_snapshot(Venues.VenueLocation)
+      location: Snapshot.last_snapshot(Venues.VenueLocation),
+      time_zone: Snapshot.last_snapshot(Venues.VenueTimeZone)
     )
   end
 end

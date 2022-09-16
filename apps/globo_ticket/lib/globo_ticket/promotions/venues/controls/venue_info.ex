@@ -9,9 +9,12 @@ defmodule GloboTicket.Promotions.Venues.Controls.VenueInfo do
       uuid: Identifier.Uuid.Controls.Random.example(),
       name: "American Airlines Center",
       city: "Montreal",
+      last_updated_ticks: Ticks.zero(),
       latitude: 1.0,
       longitude: 2.0,
-      last_updated_ticks: Ticks.zero()
+      location_last_updated_ticks: Ticks.zero(),
+      time_zone: "America/Toronto",
+      time_zone_last_updated_ticks: Ticks.zero()
     }
 
     attrs = Enum.into(attrs, defaults)

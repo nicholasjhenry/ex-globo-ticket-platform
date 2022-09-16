@@ -41,6 +41,14 @@ defmodule GloboTicket.Promotions.Venues.VenueCommands do
     end
   end
 
+  def delete_venue(venue_uuid) do
+    venue = Repo.get_by(Venues.Venue, uuid: venue_uuid)
+
+    venue
+    |> Ecto.build_assoc(:removed, removed_at: DateTime.utc_now())
+    |> Repo.insert()
+  end
+
   defp description_equal?(venue_info, %Venues.VenueDescription{} = description) do
     venue_info.name == description.name &&
       venue_info.city == description.city

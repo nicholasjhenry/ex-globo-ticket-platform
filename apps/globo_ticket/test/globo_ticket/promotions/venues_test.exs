@@ -79,4 +79,16 @@ defmodule GloboTicket.Promotions.VenuesTest do
       Venues.VenueCommands.save_venue(venue_uuid, venue_info)
     end
   end
+
+  test "when venue deleted venue is not returned" do
+    venue_uuid = Identifier.Uuid.Controls.Static.example()
+
+    venue_info = Venues.Controls.VenueInfo.example(name: "American Airlines Center")
+    _result = Venues.VenueCommands.save_venue(venue_uuid, venue_info)
+
+    _result = Venues.VenueCommands.delete_venue(venue_uuid)
+
+    venue = Venues.VenueQueries.get_venue(venue_uuid)
+    refute venue
+  end
 end

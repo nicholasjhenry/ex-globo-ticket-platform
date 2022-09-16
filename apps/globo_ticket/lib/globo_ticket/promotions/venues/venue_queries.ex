@@ -9,6 +9,7 @@ defmodule GloboTicket.Promotions.Venues.VenueQueries do
 
   def get_venue(uuid) do
     Venues.Venue
+    |> present
     |> Repo.get_by(uuid: uuid)
     |> preload_venue()
     |> to_venue_info()
@@ -16,14 +17,21 @@ defmodule GloboTicket.Promotions.Venues.VenueQueries do
 
   def list_venues do
     Venues.Venue
+    |> present
     |> Repo.all()
     |> preload_venue()
     |> Enum.map(&to_venue_info/1)
   end
 
+  defp present(query) do
+    from record in query, left_join: removed in assoc(record, :removed), where: is_nil(removed.id)
+  end
+
   defp preload_venue(venue_or_venues) do
     Repo.preload(venue_or_venues, descriptions: most_recent(Venues.VenueDescription))
   end
+
+  defp to_venue_info(nil), do: nil
 
   defp to_venue_info(venue_record) do
     [description_record] = venue_record.descriptions

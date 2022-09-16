@@ -17,4 +17,13 @@ defmodule GloboTicket.Promotions.Venues.VenueDescription do
     |> cast(attrs, [:name, :city])
     |> validate_required([:name, :city])
   end
+
+  def equal?(nil, _next_snapshot) do
+    false
+  end
+
+  def equal?(last_snapshot, next_snapshot) do
+    last_snapshot.name == next_snapshot.name &&
+      last_snapshot.city == next_snapshot.city
+  end
 end

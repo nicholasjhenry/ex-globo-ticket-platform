@@ -26,6 +26,9 @@ defmodule GloboTicket.Promotions.Venues.VenueQueries do
   end
 
   defp preload_venue(venue_or_venues) do
-    Repo.preload(venue_or_venues, description: Snapshot.last_snapshot(Venues.VenueDescription))
+    Repo.preload(venue_or_venues,
+      description: Snapshot.last_snapshot(Venues.VenueDescription),
+      location: Snapshot.last_snapshot(Venues.VenueLocation)
+    )
   end
 end

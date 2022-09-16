@@ -20,20 +20,25 @@ defmodule Emu.Repo do
     Repo.insert(next_snapshot)
   end
 
-  def save_snapshot(entity, last_snapshot, next_snapshot) do
+  def save_snapshot(entity, last_snapshot, next_snapshot, field \\ :last_updated_ticks) do
     if next_snapshot.__struct__.equal?(last_snapshot, next_snapshot) do
       {:ok, last_snapshot}
     else
-      concurrency_check!(entity, last_snapshot)
+      entity
+      |> Map.fetch!(field)
+      |> concurrency_check!(last_snapshot)
+
       Repo.insert(next_snapshot)
     end
   end
 
-  defp concurrency_check!(entity, last_snapshot) do
+  defp concurrency_check!(_timestamp, nil), do: :ok
+
+  defp concurrency_check!(timestamp, last_snapshot) do
     updated_ticks = Ticks.from_date_time(last_snapshot.inserted_at)
 
-    if Ticks.any?(entity.last_updated_ticks) &&
-         !Ticks.equal?(updated_ticks, entity.last_updated_ticks) do
+    if Ticks.any?(timestamp) &&
+         !Ticks.equal?(updated_ticks, timestamp) do
       raise Ecto.StaleEntryError, action: :insert, changeset: %{data: last_snapshot}
     else
       :ok

@@ -7,8 +7,8 @@ defmodule GloboTicket.Promotions.Venues.Venue do
 
   schema "promotion_venues" do
     field :uuid, Ecto.UUID
-    has_many :descriptions, Venues.VenueDescription
     has_one :description, Venues.VenueDescription
+    has_one :location, Venues.VenueLocation
     has_one :removed, Venues.VenueRemoved
 
     timestamps()

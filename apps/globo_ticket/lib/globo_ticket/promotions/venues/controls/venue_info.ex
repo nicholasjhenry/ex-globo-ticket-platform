@@ -9,6 +9,8 @@ defmodule GloboTicket.Promotions.Venues.Controls.VenueInfo do
       uuid: Identifier.Uuid.Controls.Random.example(),
       name: "American Airlines Center",
       city: "Montreal",
+      latitude: 1.0,
+      longitude: 2.0,
       last_updated_ticks: Ticks.zero()
     }
 

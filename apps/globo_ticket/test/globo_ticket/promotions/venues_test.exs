@@ -80,6 +80,17 @@ defmodule GloboTicket.Promotions.VenuesTest do
     end
   end
 
+  test "when set venue location then venue location is returned" do
+    venue_uuid = Identifier.Uuid.Controls.Static.example()
+
+    venue_info = Venues.Controls.VenueInfo.example(latitude: 45.508888, longitude: -73.561668)
+    _result = Venues.VenueCommands.save_venue(venue_uuid, venue_info)
+
+    venue = Venues.VenueQueries.get_venue(venue_uuid)
+    assert venue.latitude == 45.508888
+    assert venue.longitude == -73.561668
+  end
+
   test "when venue deleted venue is not returned" do
     venue_uuid = Identifier.Uuid.Controls.Static.example()
 

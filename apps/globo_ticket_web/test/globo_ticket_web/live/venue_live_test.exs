@@ -20,5 +20,32 @@ defmodule GloboTicketWeb.VenueLiveTest do
       assert html =~ "Listing Venues"
       assert html =~ venue.name
     end
+
+    test "saves new venue", %{conn: conn} do
+      uuid = Identifier.Uuid.Controls.Static.example()
+      {:ok, index_live, _html} = live(conn, Routes.venue_index_path(conn, :index, uuid: uuid))
+
+      assert index_live |> element("a", "New Venue") |> render_click() =~
+               "New Venue"
+
+      assert_patch(index_live, Routes.venue_index_path(conn, :new, uuid))
+
+      invalid_attrs = %{}
+
+      assert index_live
+             |> form("#venue-form", venue: invalid_attrs)
+             |> render_change() =~ "can&#39;t be blank"
+
+      create_attrs = Venues.Controls.VenueInfo.Attrs.valid() |> Map.drop([:uuid])
+
+      {:ok, _, html} =
+        index_live
+        |> form("#venue-form", venue: create_attrs)
+        |> render_submit()
+        |> follow_redirect(conn, Routes.venue_index_path(conn, :index))
+
+      assert html =~ "Venue created successfully"
+      assert html =~ create_attrs.name
+    end
   end
 end

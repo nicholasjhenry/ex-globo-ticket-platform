@@ -20,4 +20,19 @@ defmodule GloboTicket.Promotions.Venues.Controls.VenueInfo do
     attrs = Enum.into(attrs, defaults)
     struct!(Venues.VenueInfo, attrs)
   end
+
+  defmodule Attrs do
+    def valid(attrs \\ %{}) do
+      defaults = %{
+        uuid: Identifier.Uuid.Controls.Random.example(),
+        name: "American Airlines Center",
+        city: "Montreal",
+        latitude: 1.0,
+        longitude: 2.0,
+        time_zone: "America/Toronto"
+      }
+
+      Enum.into(attrs, defaults)
+    end
+  end
 end

@@ -11,25 +11,24 @@ defmodule GloboTicket.Promotions.Venues.VenueQueries do
 
   def get_venue(uuid) do
     Venues.Venue
+    |> preload_venue()
     |> Tombstone.present()
     |> Repo.get_by(uuid: uuid)
-    |> preload_venue()
     |> Venues.VenueInfo.from_record()
   end
 
   def list_venues do
     Venues.Venue
+    |> preload_venue()
     |> Tombstone.present()
     |> Repo.all()
-    |> preload_venue()
     |> Enum.map(&Venues.VenueInfo.from_record/1)
   end
 
-  defp preload_venue(venue_or_venues) do
-    Repo.preload(venue_or_venues,
-      description: Snapshot.last_snapshot(Venues.VenueDescription),
-      location: Snapshot.last_snapshot(Venues.VenueLocation),
-      time_zone: Snapshot.last_snapshot(Venues.VenueTimeZone)
-    )
+  defp preload_venue(query) do
+    query
+    |> preload([venue], description: ^Snapshot.last_snapshot(Venues.VenueDescription, :venue_id))
+    |> preload([venue], location: ^Snapshot.last_snapshot(Venues.VenueLocation, :venue_id))
+    |> preload([venue], time_zone: ^Snapshot.last_snapshot(Venues.VenueTimeZone, :venue_id))
   end
 end

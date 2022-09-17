@@ -5,18 +5,31 @@ defmodule GloboTicketWeb.VenueLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, :venues, list_venues())}
+    socket = assign(socket, :venues, list_venues())
+    {:ok, socket}
   end
 
   @impl true
   def handle_params(params, _url, socket) do
-    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+    socket = apply_action(socket, socket.assigns.live_action, params)
+
+    {:noreply, socket}
   end
 
-  defp apply_action(socket, :index, _params) do
+  defp apply_action(socket, :index, params) do
+    uuid = params["uuid"] || Identifier.Uuid.generate()
+
     socket
     |> assign(:page_title, "Listing Venues")
     |> assign(:venue, nil)
+    |> assign(:uuid, uuid)
+  end
+
+  defp apply_action(socket, :new, %{"uuid" => uuid}) do
+    socket
+    |> assign(:page_title, "New Venue")
+    |> assign(:venue, %Venues.VenueInfo{uuid: uuid})
+    |> assign(:uuid, :new)
   end
 
   defp list_venues do

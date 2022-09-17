@@ -1,21 +1,34 @@
 defmodule GloboTicket.Promotions.Venues.VenueInfo do
   @moduledoc false
 
-  use TypedStruct
-
   alias Emu.Ticks
   alias GloboTicket.Promotions.Venues
 
-  typedstruct do
-    field :uuid, Identifier.Uuid.t()
-    field :name, String.t()
-    field :city, String.t()
-    field :last_updated_ticks, {integer(), non_neg_integer()}
-    field :latitude, number()
-    field :longitude, number()
-    field :location_last_updated_ticks, {integer(), non_neg_integer()}
-    field :time_zone, String.t()
-    field :time_zone_last_updated_ticks, {integer(), non_neg_integer()}
+  use GloboTicket.Schema
+
+  @primary_key {:uuid, :binary_id, []}
+
+  embedded_schema do
+    field :name, :string
+    field :city, :string
+    field :last_updated_ticks, :integer
+    field :latitude, :float
+    field :longitude, :float
+    field :location_last_updated_ticks, :integer
+    field :time_zone, :string
+    field :time_zone_last_updated_ticks, :integer
+  end
+
+  def changeset(struct, params) do
+    struct
+    |> cast(params, [:uuid, :name, :city, :latitude, :longitude, :time_zone])
+    |> validate_required([:uuid, :name, :city, :latitude, :longitude, :time_zone])
+  end
+
+  def from_params(struct, params) do
+    struct
+    |> changeset(params)
+    |> Ecto.Changeset.apply_action(:converted)
   end
 
   def from_record(nil), do: nil

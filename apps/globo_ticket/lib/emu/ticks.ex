@@ -5,6 +5,8 @@ defmodule Emu.Ticks do
     {0, 0}
   end
 
+  def any?(nil), do: false
+
   def any?(ticks) do
     ticks != {0, 0}
   end

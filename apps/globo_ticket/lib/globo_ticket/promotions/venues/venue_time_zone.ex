@@ -1,4 +1,6 @@
 defmodule GloboTicket.Promotions.Venues.VenueTimeZone do
+  @moduledoc false
+
   use GloboTicket.Schema
   import Ecto.Changeset
 

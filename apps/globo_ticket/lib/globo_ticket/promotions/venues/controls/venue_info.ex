@@ -22,6 +22,8 @@ defmodule GloboTicket.Promotions.Venues.Controls.VenueInfo do
   end
 
   defmodule Attrs do
+    @moduledoc false
+
     def valid(attrs \\ %{}) do
       defaults = %{
         uuid: Identifier.Uuid.Controls.Random.example(),

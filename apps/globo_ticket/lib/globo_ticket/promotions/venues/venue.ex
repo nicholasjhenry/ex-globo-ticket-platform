@@ -29,22 +29,6 @@ defmodule GloboTicket.Promotions.Venues.Venue do
     |> Ecto.Changeset.apply_action(:converted)
   end
 
-  def from_record(nil), do: nil
-
-  def from_record(record) do
-    %__MODULE__{
-      id: record.uuid,
-      name: record.description.name,
-      city: record.description.city,
-      last_updated_ticks: Ticks.from_date_time(record.description.inserted_at),
-      latitude: record.location.latitude,
-      longitude: record.location.longitude,
-      location_last_updated_ticks: Ticks.from_date_time(record.location.inserted_at),
-      time_zone: record.time_zone.time_zone,
-      time_zone_last_updated_ticks: Ticks.from_date_time(record.time_zone.inserted_at)
-    }
-  end
-
   def to_description_record(venue_info, venue) do
     %Records.VenueDescription{
       venue_id: venue.id,

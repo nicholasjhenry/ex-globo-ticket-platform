@@ -12,6 +12,6 @@ defmodule GloboTicket.Promotions.Venues.Store do
     |> Venues.Query.snapshots_query()
     |> Tombstone.present()
     |> Repo.get_by!(uuid: uuid)
-    |> Venues.Venue.from_record()
+    |> Records.Venue.to_entity()
   end
 end

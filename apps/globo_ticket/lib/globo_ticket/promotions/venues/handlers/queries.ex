@@ -14,6 +14,6 @@ defmodule GloboTicket.Promotions.Venues.Handlers.Queries do
     |> Venues.Query.snapshots_query()
     |> Tombstone.present()
     |> Repo.all()
-    |> Enum.map(&Venues.Venue.from_record/1)
+    |> Enum.map(&Records.Venue.to_entity/1)
   end
 end

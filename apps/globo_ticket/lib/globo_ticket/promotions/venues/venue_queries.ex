@@ -9,11 +9,11 @@ defmodule GloboTicket.Promotions.Venues.VenueQueries do
 
   use GloboTicket.QueryHandler
 
-  def get_venue(uuid) do
+  def get_venue!(uuid) do
     Venues.Venue
     |> preload_venue()
     |> Tombstone.present()
-    |> Repo.get_by(uuid: uuid)
+    |> Repo.get_by!(uuid: uuid)
     |> Venues.VenueInfo.from_record()
   end
 

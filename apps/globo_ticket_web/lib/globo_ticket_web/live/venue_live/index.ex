@@ -35,7 +35,7 @@ defmodule GloboTicketWeb.VenueLive.Index do
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
     |> assign(:page_title, "Edit Venue")
-    |> assign(:venue, Venues.VenueQueries.get_venue(id))
+    |> assign(:venue, Venues.VenueQueries.get_venue!(id))
   end
 
   @impl true

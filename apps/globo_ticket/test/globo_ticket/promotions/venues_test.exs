@@ -43,7 +43,7 @@ defmodule GloboTicket.Promotions.VenuesTest do
 
     _result = Venues.VenueCommands.save_venue(venue_info)
 
-    venue = Venues.VenueQueries.get_venue(venue_uuid)
+    venue = Venues.VenueQueries.get_venue!(venue_uuid)
     assert venue.name == "American Airlines Center"
   end
 
@@ -54,10 +54,10 @@ defmodule GloboTicket.Promotions.VenuesTest do
       Venues.Controls.VenueInfo.example(id: venue_uuid, name: "American Airlines Center")
 
     _result = Venues.VenueCommands.save_venue(venue_info)
-    first_snapshot = Venues.VenueQueries.get_venue(venue_uuid)
+    first_snapshot = Venues.VenueQueries.get_venue!(venue_uuid)
 
     _result = Venues.VenueCommands.save_venue(venue_info)
-    second_snapshot = Venues.VenueQueries.get_venue(venue_uuid)
+    second_snapshot = Venues.VenueQueries.get_venue!(venue_uuid)
 
     assert second_snapshot.last_updated_ticks == first_snapshot.last_updated_ticks
   end
@@ -69,7 +69,7 @@ defmodule GloboTicket.Promotions.VenuesTest do
       Venues.Controls.VenueInfo.example(id: venue_uuid, name: "American Airlines Center")
 
     _result = Venues.VenueCommands.save_venue(venue_info)
-    venue = Venues.VenueQueries.get_venue(venue_uuid)
+    venue = Venues.VenueQueries.get_venue!(venue_uuid)
 
     venue_info =
       Venues.Controls.VenueInfo.example(
@@ -104,7 +104,7 @@ defmodule GloboTicket.Promotions.VenuesTest do
 
     _result = Venues.VenueCommands.save_venue(venue_info)
 
-    venue = Venues.VenueQueries.get_venue(venue_uuid)
+    venue = Venues.VenueQueries.get_venue!(venue_uuid)
     assert venue.latitude == 45.508888
     assert venue.longitude == -73.561668
   end
@@ -115,7 +115,7 @@ defmodule GloboTicket.Promotions.VenuesTest do
     venue_info = Venues.Controls.VenueInfo.example(id: venue_uuid, time_zone: "America/Toronto")
     _result = Venues.VenueCommands.save_venue(venue_info)
 
-    venue = Venues.VenueQueries.get_venue(venue_uuid)
+    venue = Venues.VenueQueries.get_venue!(venue_uuid)
     assert venue.time_zone == "America/Toronto"
   end
 
@@ -129,7 +129,6 @@ defmodule GloboTicket.Promotions.VenuesTest do
 
     _result = Venues.VenueCommands.delete_venue(venue_uuid)
 
-    venue = Venues.VenueQueries.get_venue(venue_uuid)
-    refute venue
+    assert_raise Ecto.NoResultsError, fn -> Venues.VenueQueries.get_venue!(venue_uuid) end
   end
 end

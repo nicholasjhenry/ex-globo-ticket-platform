@@ -24,6 +24,7 @@ defmodule GloboTicketWeb.Router do
     live "/venues/:id/edit", VenueLive.Index, :edit
 
     live "/venue/:id", VenueLive.Show, :show
+    live "/venue/:id/show/edit", VenueLive.Show, :edit
   end
 
   if Mix.env() in [:dev, :test] do

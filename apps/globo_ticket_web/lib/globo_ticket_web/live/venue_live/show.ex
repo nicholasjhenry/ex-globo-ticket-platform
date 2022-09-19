@@ -16,5 +16,6 @@ defmodule GloboTicketWeb.VenueLive.Show do
      |> assign(:venue, Venues.VenueQueries.get_venue(id))}
   end
 
-  defp page_title(:show), do: "Show User"
+  defp page_title(:show), do: "Show Venue"
+  defp page_title(:edit), do: "Edit Venue"
 end

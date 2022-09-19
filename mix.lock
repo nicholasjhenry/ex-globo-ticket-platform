@@ -1,4 +1,5 @@
 %{
+  "assert_html": {:hex, :assert_html, "0.1.3", "7a61f2664b8d6b3eddf0819cf4d949948f553e8b42530738b7dad794f88b845c", [:mix], [{:floki, "~> 0.21", [hex: :floki, repo: "hexpm", optional: false]}], "hexpm", "df06499ed2295d01d785b4d6255794a83b402bc953e193316873cf64e0433881"},
   "bunt": {:hex, :bunt, "0.2.1", "e2d4792f7bc0ced7583ab54922808919518d0e57ee162901a16a1b6664ef3b14", [:mix], [], "hexpm", "a330bfb4245239787b15005e66ae6845c9cd524a288f0d141c148b02603777a5"},
   "castore": {:hex, :castore, "0.1.18", "deb5b9ab02400561b6f5708f3e7660fc35ca2d51bfc6a940d2f513f89c2975fc", [:mix], [], "hexpm", "61bbaf6452b782ef80b33cdb45701afbcf0a918a45ebe7e73f1130d661e66a06"},
   "connection": {:hex, :connection, "1.1.0", "ff2a49c4b75b6fb3e674bfc5536451607270aac754ffd1bdfe175abe4a6d7a68", [:mix], [], "hexpm", "722c1eb0a418fbe91ba7bd59a47e28008a189d47e37e0e7bb85585a016b2869c"},

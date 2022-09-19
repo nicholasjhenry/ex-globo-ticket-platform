@@ -52,6 +52,7 @@ defmodule GloboTicketWeb.MixProject do
 
   defp project_deps do
     [
+      {:assert_html, ">= 0.0.1", only: :test},
       {:globo_ticket, in_umbrella: true}
     ]
   end

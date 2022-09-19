@@ -1,4 +1,4 @@
-defmodule GloboTicket.Promotions.Venues.Controls.VenueInfo do
+defmodule GloboTicket.Promotions.Venues.Controls.Venue do
   @moduledoc false
 
   alias Emu.Ticks
@@ -18,7 +18,7 @@ defmodule GloboTicket.Promotions.Venues.Controls.VenueInfo do
     }
 
     attrs = Enum.into(attrs, defaults)
-    struct!(Venues.VenueInfo, attrs)
+    struct!(Venues.Venue, attrs)
   end
 
   def generate(attrs \\ %{}) do
@@ -35,7 +35,7 @@ defmodule GloboTicket.Promotions.Venues.Controls.VenueInfo do
     }
 
     attrs = Enum.into(attrs, defaults)
-    struct!(Venues.VenueInfo, attrs)
+    struct!(Venues.Venue, attrs)
   end
 
   defmodule Attrs do

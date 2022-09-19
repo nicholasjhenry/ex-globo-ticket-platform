@@ -15,7 +15,7 @@ defmodule GloboTicket.Promotions.Venues.VenueQueries do
     |> preload_venue()
     |> Tombstone.present()
     |> Repo.get_by!(uuid: uuid)
-    |> Venues.VenueInfo.from_record()
+    |> Venues.Venue.from_record()
   end
 
   def list_venues do
@@ -23,7 +23,7 @@ defmodule GloboTicket.Promotions.Venues.VenueQueries do
     |> preload_venue()
     |> Tombstone.present()
     |> Repo.all()
-    |> Enum.map(&Venues.VenueInfo.from_record/1)
+    |> Enum.map(&Venues.Venue.from_record/1)
   end
 
   defp preload_venue(query) do

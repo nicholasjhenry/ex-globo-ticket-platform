@@ -1,4 +1,4 @@
-defmodule GloboTicket.Promotions.Venues.VenueInfo do
+defmodule GloboTicket.Promotions.Venues.Venue do
   @moduledoc false
 
   alias Emu.Ticks

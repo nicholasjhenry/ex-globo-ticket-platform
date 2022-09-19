@@ -5,7 +5,7 @@ defmodule GloboTicketWeb.VenueLive.FormComponent do
 
   @impl true
   def update(%{venue: venue} = assigns, socket) do
-    changeset = Venues.VenueInfo.changeset(venue, %{})
+    changeset = Venues.Venue.changeset(venue, %{})
 
     socket =
       socket
@@ -19,7 +19,7 @@ defmodule GloboTicketWeb.VenueLive.FormComponent do
   def handle_event("validate", %{"venue" => venue_params}, socket) do
     changeset =
       socket.assigns.venue
-      |> Venues.VenueInfo.changeset(venue_params)
+      |> Venues.Venue.changeset(venue_params)
       |> Map.put(:action, :validate)
 
     {:noreply, assign(socket, :changeset, changeset)}
@@ -31,7 +31,7 @@ defmodule GloboTicketWeb.VenueLive.FormComponent do
 
   defp save_venue(socket, :new, venue_params) do
     with {:ok, venue} <-
-           Venues.VenueInfo.from_params(socket.assigns.venue, venue_params),
+           Venues.Venue.from_params(socket.assigns.venue, venue_params),
          {:ok, _venue} <- Venues.VenueCommands.save_venue(venue) do
       {:noreply,
        socket
@@ -45,7 +45,7 @@ defmodule GloboTicketWeb.VenueLive.FormComponent do
 
   defp save_venue(socket, :edit, venue_params) do
     with {:ok, venue} <-
-           Venues.VenueInfo.from_params(socket.assigns.venue, venue_params),
+           Venues.Venue.from_params(socket.assigns.venue, venue_params),
          {:ok, _venue} <- Venues.VenueCommands.save_venue(venue) do
       {:noreply,
        socket

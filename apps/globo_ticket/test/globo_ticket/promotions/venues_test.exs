@@ -9,7 +9,7 @@ defmodule GloboTicket.Promotions.VenuesTest do
   end
 
   test "when venue added then a venue is returned" do
-    venue_info = Venues.Controls.VenueInfo.example()
+    venue_info = Venues.Controls.Venue.example()
 
     result = Venues.VenueCommands.save_venue(venue_info)
 
@@ -19,7 +19,7 @@ defmodule GloboTicket.Promotions.VenuesTest do
   end
 
   test "when venue added twice then one menu is added" do
-    venue_info = Venues.Controls.VenueInfo.example()
+    venue_info = Venues.Controls.Venue.example()
     _result = Venues.VenueCommands.save_venue(venue_info)
 
     result = Venues.VenueCommands.save_venue(venue_info)
@@ -30,7 +30,7 @@ defmodule GloboTicket.Promotions.VenuesTest do
   end
 
   test "when set venue description then venue description is returned" do
-    venue_info = Venues.Controls.VenueInfo.example(name: "American Airlines Center")
+    venue_info = Venues.Controls.Venue.example(name: "American Airlines Center")
 
     _result = Venues.VenueCommands.save_venue(venue_info)
 
@@ -39,7 +39,7 @@ defmodule GloboTicket.Promotions.VenuesTest do
   end
 
   test "when set venue description to the same description then nothing is saved" do
-    venue_info = Venues.Controls.VenueInfo.example(name: "American Airlines Center")
+    venue_info = Venues.Controls.Venue.example(name: "American Airlines Center")
     _result = Venues.VenueCommands.save_venue(venue_info)
     first_snapshot = Venues.VenueQueries.get_venue!(venue_info.id)
 
@@ -50,13 +50,13 @@ defmodule GloboTicket.Promotions.VenuesTest do
   end
 
   test "when venue is modified concurrently then exception is thrown" do
-    venue_info = Venues.Controls.VenueInfo.example(name: "American Airlines Center")
+    venue_info = Venues.Controls.Venue.example(name: "American Airlines Center")
 
     _result = Venues.VenueCommands.save_venue(venue_info)
     venue = Venues.VenueQueries.get_venue!(venue_info.id)
 
     venue_info =
-      Venues.Controls.VenueInfo.example(
+      Venues.Controls.Venue.example(
         name: "Change 1",
         last_updated_ticks: venue.last_updated_ticks
       )
@@ -65,7 +65,7 @@ defmodule GloboTicket.Promotions.VenuesTest do
 
     assert_raise Ecto.StaleEntryError, fn ->
       venue_info =
-        Venues.Controls.VenueInfo.example(
+        Venues.Controls.Venue.example(
           name: "Change 2",
           last_updated_ticks: venue.last_updated_ticks
         )
@@ -76,7 +76,7 @@ defmodule GloboTicket.Promotions.VenuesTest do
 
   test "when set venue location then venue location is returned" do
     venue_info =
-      Venues.Controls.VenueInfo.example(
+      Venues.Controls.Venue.example(
         latitude: 45.508888,
         longitude: -73.561668
       )
@@ -89,7 +89,7 @@ defmodule GloboTicket.Promotions.VenuesTest do
   end
 
   test "when set venue timezone then venue timezone is returned" do
-    venue_info = Venues.Controls.VenueInfo.example(time_zone: "America/Toronto")
+    venue_info = Venues.Controls.Venue.example(time_zone: "America/Toronto")
 
     _result = Venues.VenueCommands.save_venue(venue_info)
 
@@ -98,7 +98,7 @@ defmodule GloboTicket.Promotions.VenuesTest do
   end
 
   test "when venue deleted venue is not returned" do
-    venue_info = Venues.Controls.VenueInfo.example()
+    venue_info = Venues.Controls.Venue.example()
     _result = Venues.VenueCommands.save_venue(venue_info)
 
     _result = Venues.VenueCommands.delete_venue(venue_info.id)

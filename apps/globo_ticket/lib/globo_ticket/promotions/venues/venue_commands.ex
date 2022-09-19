@@ -18,9 +18,9 @@ defmodule GloboTicket.Promotions.Venues.VenueCommands do
         |> preload_venue()
         |> Repo.get_by(uuid: venue.uuid)
 
-      description = Venues.VenueInfo.to_description_record(venue_info, venue)
-      location = Venues.VenueInfo.to_location_record(venue_info, venue)
-      time_zone = Venues.VenueInfo.to_time_zone_record(venue_info, venue)
+      description = Venues.Venue.to_description_record(venue_info, venue)
+      location = Venues.Venue.to_location_record(venue_info, venue)
+      time_zone = Venues.Venue.to_time_zone_record(venue_info, venue)
 
       with {:ok, _} <- Emu.Repo.save_snapshot(venue_info, venue.description, description),
            {:ok, _} <-

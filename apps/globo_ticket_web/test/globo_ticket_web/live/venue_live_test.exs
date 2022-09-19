@@ -56,15 +56,19 @@ defmodule GloboTicketWeb.VenueLiveTest do
 
       assert_patch(index_live, Routes.venue_index_path(conn, :edit, venue))
 
-      invalid_attrs = Venues.Controls.VenueInfo.Attrs.invalid(name: "Changed Name") |> Map.drop([:id])
+      invalid_attrs =
+        Venues.Controls.VenueInfo.Attrs.invalid(name: "Changed Name") |> Map.drop([:id])
+
       assert index_live
              |> form("#venue-form", venue: invalid_attrs)
              |> render_change() =~ "can&#39;t be blank"
 
-      update_attrs = Venues.Controls.VenueInfo.Attrs.valid(name: "Changed Name") |> Map.drop([:id])
+      update_attrs =
+        Venues.Controls.VenueInfo.Attrs.valid(name: "Changed Name") |> Map.drop([:id])
+
       {:ok, _, html} =
         index_live
-        |> form("#venue-form",  venue: update_attrs)
+        |> form("#venue-form", venue: update_attrs)
         |> render_submit()
         |> follow_redirect(conn, Routes.venue_index_path(conn, :index))
 
@@ -98,13 +102,15 @@ defmodule GloboTicketWeb.VenueLiveTest do
 
       assert_patch(show_live, Routes.venue_show_path(conn, :edit, venue))
 
-      invalid_attrs = Venues.Controls.VenueInfo.Attrs.invalid(name: "Changed Name") |> Map.drop([:id])
+      invalid_attrs =
+        Venues.Controls.VenueInfo.Attrs.invalid(name: "Changed Name") |> Map.drop([:id])
 
       assert show_live
              |> form("#venue-form", venue: invalid_attrs)
              |> render_change() =~ "can&#39;t be blank"
 
-      update_attrs = Venues.Controls.VenueInfo.Attrs.valid(name: "Changed Name") |> Map.drop([:id])
+      update_attrs =
+        Venues.Controls.VenueInfo.Attrs.valid(name: "Changed Name") |> Map.drop([:id])
 
       {:ok, _, html} =
         show_live

@@ -11,7 +11,9 @@ defmodule GloboTicket.Promotions.VenuesTest do
   test "when venue added then a venue is returned" do
     venue_uuid = Identifier.Uuid.Controls.Static.example()
 
-    venue_info = Venues.Controls.VenueInfo.example(id: venue_uuid, name: "American Airlines Center")
+    venue_info =
+      Venues.Controls.VenueInfo.example(id: venue_uuid, name: "American Airlines Center")
+
     result = Venues.VenueCommands.save_venue(venue_info)
 
     assert {:ok, _record} = result
@@ -22,7 +24,9 @@ defmodule GloboTicket.Promotions.VenuesTest do
   test "when venue added twice then one menu is added" do
     venue_uuid = Identifier.Uuid.Controls.Static.example()
 
-    venue_info = Venues.Controls.VenueInfo.example(id: venue_uuid, name: "American Airlines Center")
+    venue_info =
+      Venues.Controls.VenueInfo.example(id: venue_uuid, name: "American Airlines Center")
+
     _result = Venues.VenueCommands.save_venue(venue_info)
     result = Venues.VenueCommands.save_venue(venue_info)
 
@@ -34,7 +38,9 @@ defmodule GloboTicket.Promotions.VenuesTest do
   test "when set venue description then venue description is returned" do
     venue_uuid = Identifier.Uuid.Controls.Static.example()
 
-    venue_info = Venues.Controls.VenueInfo.example(id: venue_uuid, name: "American Airlines Center")
+    venue_info =
+      Venues.Controls.VenueInfo.example(id: venue_uuid, name: "American Airlines Center")
+
     _result = Venues.VenueCommands.save_venue(venue_info)
 
     venue = Venues.VenueQueries.get_venue(venue_uuid)
@@ -44,7 +50,9 @@ defmodule GloboTicket.Promotions.VenuesTest do
   test "when set venue description to the same description then nothing is saved" do
     venue_uuid = Identifier.Uuid.Controls.Static.example()
 
-    venue_info = Venues.Controls.VenueInfo.example(id: venue_uuid, name: "American Airlines Center")
+    venue_info =
+      Venues.Controls.VenueInfo.example(id: venue_uuid, name: "American Airlines Center")
+
     _result = Venues.VenueCommands.save_venue(venue_info)
     first_snapshot = Venues.VenueQueries.get_venue(venue_uuid)
 
@@ -57,7 +65,9 @@ defmodule GloboTicket.Promotions.VenuesTest do
   test "when venue is modified concurrently then exception is thrown" do
     venue_uuid = Identifier.Uuid.Controls.Static.example()
 
-    venue_info = Venues.Controls.VenueInfo.example(id: venue_uuid, name: "American Airlines Center")
+    venue_info =
+      Venues.Controls.VenueInfo.example(id: venue_uuid, name: "American Airlines Center")
+
     _result = Venues.VenueCommands.save_venue(venue_info)
     venue = Venues.VenueQueries.get_venue(venue_uuid)
 
@@ -85,7 +95,13 @@ defmodule GloboTicket.Promotions.VenuesTest do
   test "when set venue location then venue location is returned" do
     venue_uuid = Identifier.Uuid.Controls.Static.example()
 
-    venue_info = Venues.Controls.VenueInfo.example(id: venue_uuid, latitude: 45.508888, longitude: -73.561668)
+    venue_info =
+      Venues.Controls.VenueInfo.example(
+        id: venue_uuid,
+        latitude: 45.508888,
+        longitude: -73.561668
+      )
+
     _result = Venues.VenueCommands.save_venue(venue_info)
 
     venue = Venues.VenueQueries.get_venue(venue_uuid)
@@ -106,7 +122,9 @@ defmodule GloboTicket.Promotions.VenuesTest do
   test "when venue deleted venue is not returned" do
     venue_uuid = Identifier.Uuid.Controls.Static.example()
 
-    venue_info = Venues.Controls.VenueInfo.example(id: venue_uuid, name: "American Airlines Center")
+    venue_info =
+      Venues.Controls.VenueInfo.example(id: venue_uuid, name: "American Airlines Center")
+
     _result = Venues.VenueCommands.save_venue(venue_info)
 
     _result = Venues.VenueCommands.delete_venue(venue_uuid)

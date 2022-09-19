@@ -5,7 +5,6 @@ defmodule GloboTicket.Promotions.Venues.Handlers.Commands do
 
   use GloboTicket.CommandHandler
 
-  alias Emu.Snapshot
   alias GloboTicket.Promotions.Venues
   alias GloboTicket.Promotions.Venues.Records
 
@@ -15,7 +14,7 @@ defmodule GloboTicket.Promotions.Venues.Handlers.Commands do
     with {:ok, venue} <- Emu.Store.save_entity_record(venue) do
       venue =
         Records.Venue
-        |> preload_venue()
+        |> Venues.Query.snapshots_query()
         |> Repo.get_by(uuid: venue.uuid)
 
       description = Venues.Venue.to_description_record(venue_info, venue)
@@ -45,12 +44,5 @@ defmodule GloboTicket.Promotions.Venues.Handlers.Commands do
   def delete_venue(venue_uuid) do
     venue = Repo.get_by(Records.Venue, uuid: venue_uuid)
     Emu.Store.soft_delete(venue)
-  end
-
-  defp preload_venue(query) do
-    query
-    |> preload([venue], description: ^Snapshot.last_snapshot(Records.VenueDescription, :venue_id))
-    |> preload([venue], location: ^Snapshot.last_snapshot(Records.VenueLocation, :venue_id))
-    |> preload([venue], time_zone: ^Snapshot.last_snapshot(Records.VenueTimeZone, :venue_id))
   end
 end

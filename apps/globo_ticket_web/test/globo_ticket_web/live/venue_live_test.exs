@@ -102,8 +102,8 @@ defmodule GloboTicketWeb.VenueLiveTest do
     test "updates venue within modal", %{conn: conn, venue: venue} do
       {:ok, show_live, _html} = live(conn, Routes.venue_show_path(conn, :show, venue))
 
-      assert show_live |> element("a", "Edit") |> render_click() =~
-               "Edit Venue"
+      html = show_live |> element("a", "Edit") |> render_click()
+      assert_html(html, "h2", "Edit Venue")
 
       assert_patch(show_live, Routes.venue_show_path(conn, :edit, venue))
 

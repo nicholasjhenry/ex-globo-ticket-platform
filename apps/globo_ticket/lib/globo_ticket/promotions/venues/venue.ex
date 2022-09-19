@@ -1,9 +1,6 @@
 defmodule GloboTicket.Promotions.Venues.Venue do
   @moduledoc false
 
-  alias Emu.Ticks
-  alias GloboTicket.Promotions.Venues.Records
-
   use GloboTicket.Schema
 
   embedded_schema do
@@ -27,28 +24,5 @@ defmodule GloboTicket.Promotions.Venues.Venue do
     struct
     |> changeset(params)
     |> Ecto.Changeset.apply_action(:converted)
-  end
-
-  def to_description_record(venue_info, venue) do
-    %Records.VenueDescription{
-      venue_id: venue.id,
-      name: venue_info.name,
-      city: venue_info.city
-    }
-  end
-
-  def to_location_record(venue_info, venue) do
-    %Records.VenueLocation{
-      venue_id: venue.id,
-      latitude: venue_info.latitude,
-      longitude: venue_info.longitude
-    }
-  end
-
-  def to_time_zone_record(venue_info, venue) do
-    %Records.VenueTimeZone{
-      venue_id: venue.id,
-      time_zone: venue_info.time_zone
-    }
   end
 end

@@ -26,4 +26,12 @@ defmodule GloboTicket.Promotions.Venues.Records.VenueDescription do
     last_snapshot.name == next_snapshot.name &&
       last_snapshot.city == next_snapshot.city
   end
+
+  def from_entity(entity, record) do
+    %__MODULE__{
+      venue_id: record.id,
+      name: entity.name,
+      city: entity.city
+    }
+  end
 end

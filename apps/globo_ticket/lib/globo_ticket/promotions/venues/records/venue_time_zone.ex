@@ -25,4 +25,11 @@ defmodule GloboTicket.Promotions.Venues.Records.VenueTimeZone do
   def equal?(last_snapshot, next_snapshot) do
     last_snapshot.time_zone == next_snapshot.time_zone
   end
+
+  def from_entity(entity, record) do
+    %__MODULE__{
+      venue_id: record.id,
+      time_zone: entity.time_zone
+    }
+  end
 end

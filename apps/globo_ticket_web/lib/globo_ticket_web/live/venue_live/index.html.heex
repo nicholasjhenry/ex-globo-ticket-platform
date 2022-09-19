@@ -4,7 +4,7 @@
   <.modal return_to={Routes.venue_index_path(@socket, :index)}>
     <.live_component
       module={GloboTicketWeb.VenueLive.FormComponent}
-      id={@venue.uuid || :new}
+      id={@venue.id || :new}
       title={@page_title}
       action={@live_action}
       venue={@venue}
@@ -26,7 +26,7 @@
   </thead>
   <tbody id="venues">
     <%= for venue <- @venues do %>
-      <tr id={"venue-#{venue.uuid}"}>
+      <tr id={"venue-#{venue.id}"}>
         <td><%= venue.name %></td>
         <td><%= venue.city %></td>
         <td><%= venue.latitude %> - <%= venue.longitude %></td>
@@ -40,4 +40,4 @@
   </tbody>
 </table>
 
-<span><%= live_patch "New Venue", to: Routes.venue_index_path(@socket, :new, @uuid) %></span>
+<span><%= live_patch "New Venue", to: Routes.venue_index_path(@socket, :new, @id) %></span>

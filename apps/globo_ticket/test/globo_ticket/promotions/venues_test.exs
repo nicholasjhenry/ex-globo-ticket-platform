@@ -16,7 +16,7 @@ defmodule GloboTicket.Promotions.VenuesTest do
 
     assert {:ok, _record} = result
     venues = Venues.VenueQueries.list_venues()
-    assert Enum.any?(venues, &(&1.uuid == venue_uuid))
+    assert Enum.any?(venues, &(&1.id == venue_uuid))
   end
 
   test "when venue added twice then one menu is added" do

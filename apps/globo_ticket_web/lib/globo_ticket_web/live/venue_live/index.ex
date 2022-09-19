@@ -17,19 +17,19 @@ defmodule GloboTicketWeb.VenueLive.Index do
   end
 
   defp apply_action(socket, :index, params) do
-    uuid = params["uuid"] || Identifier.Uuid.generate()
+    id = params["id"] || Identifier.Uuid.generate()
 
     socket
     |> assign(:page_title, "Listing Venues")
     |> assign(:venue, nil)
-    |> assign(:uuid, uuid)
+    |> assign(:id, id)
   end
 
-  defp apply_action(socket, :new, %{"uuid" => uuid}) do
+  defp apply_action(socket, :new, %{"id" => id}) do
     socket
     |> assign(:page_title, "New Venue")
-    |> assign(:venue, %Venues.VenueInfo{uuid: uuid})
-    |> assign(:uuid, :new)
+    |> assign(:venue, %Venues.VenueInfo{id: id})
+    |> assign(:id, :new)
   end
 
   defp list_venues do

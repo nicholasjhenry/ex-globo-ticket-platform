@@ -6,8 +6,6 @@ defmodule GloboTicket.Promotions.Venues.VenueInfo do
 
   use GloboTicket.Schema
 
-  @primary_key {:uuid, :binary_id, []}
-
   embedded_schema do
     field :name, :string
     field :city, :string
@@ -21,8 +19,8 @@ defmodule GloboTicket.Promotions.Venues.VenueInfo do
 
   def changeset(struct, params) do
     struct
-    |> cast(params, [:uuid, :name, :city, :latitude, :longitude, :time_zone])
-    |> validate_required([:uuid, :name, :city, :latitude, :longitude, :time_zone])
+    |> cast(params, [:id, :name, :city, :latitude, :longitude, :time_zone])
+    |> validate_required([:id, :name, :city, :latitude, :longitude, :time_zone])
   end
 
   def from_params(struct, params) do
@@ -35,7 +33,7 @@ defmodule GloboTicket.Promotions.Venues.VenueInfo do
 
   def from_record(record) do
     %Venues.VenueInfo{
-      uuid: record.uuid,
+      id: record.uuid,
       name: record.description.name,
       city: record.description.city,
       last_updated_ticks: Ticks.from_date_time(record.description.inserted_at),

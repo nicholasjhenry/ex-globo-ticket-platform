@@ -6,7 +6,7 @@ defmodule GloboTicket.Promotions.Venues.Controls.VenueInfo do
 
   def example(attrs \\ %{}) do
     defaults = %{
-      uuid: Identifier.Uuid.Controls.Random.example(),
+      id: Identifier.Uuid.Controls.Random.example(),
       name: "American Airlines Center",
       city: "Montreal",
       last_updated_ticks: Ticks.zero(),
@@ -26,7 +26,7 @@ defmodule GloboTicket.Promotions.Venues.Controls.VenueInfo do
 
     def valid(attrs \\ %{}) do
       defaults = %{
-        uuid: Identifier.Uuid.Controls.Random.example(),
+        id: Identifier.Uuid.Controls.Random.example(),
         name: "American Airlines Center",
         city: "Montreal",
         latitude: 1.0,

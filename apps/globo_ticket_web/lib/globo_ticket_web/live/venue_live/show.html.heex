@@ -1,0 +1,30 @@
+<h1>Show Venue</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.venue_show_path(@socket, :show, @venue)}>
+    <.live_component
+      module={GloboTicketWeb.VenueLive.FormComponent}
+      id={@venue.id}
+      title={@page_title}
+      action={@live_action}
+      venue={@venue}
+      return_to={Routes.venue_show_path(@socket, :show, @venue)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @venue.name %>
+  </li>
+
+  <li>
+    <strong>City:</strong>
+    <%= @venue.city %>
+  </li>
+
+</ul>
+
+<span><%= live_redirect "Back", to: Routes.venue_index_path(@socket, :index) %></span>

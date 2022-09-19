@@ -79,4 +79,15 @@ defmodule GloboTicketWeb.VenueLiveTest do
       # refute has_element?(index_live, "#user-#{user.id}")
     end
   end
+
+  describe "Show" do
+    setup [:create_venue]
+
+    test "displays venue", %{conn: conn, venue: venue} do
+      {:ok, _show_live, html} = live(conn, Routes.venue_show_path(conn, :show, venue))
+
+      assert html =~ "Show Venue"
+      assert html =~ venue.name
+    end
+  end
 end

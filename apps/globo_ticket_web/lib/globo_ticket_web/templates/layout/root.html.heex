@@ -7,12 +7,7 @@
     <meta name="csrf-token" content={csrf_token_value()} />
     <%= live_title_tag(assigns[:page_title] || "GloboTicket", suffix: " · Phoenix Framework") %>
     <link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/assets/app.css")} />
-    <script
-      defer
-      phx-track-static
-      type="text/javascript"
-      src={Routes.static_path(@conn, "/assets/app.js")}
-    >
+    <script defer phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/assets/app.js")}>
     </script>
   </head>
   <body>
@@ -27,10 +22,7 @@
           </ul>
         </nav>
         <a href="https://phoenixframework.org/" class="phx-logo">
-          <img
-            src={Routes.static_path(@conn, "/images/phoenix.png")}
-            alt="Phoenix Framework Logo"
-          />
+          <img src={Routes.static_path(@conn, "/images/phoenix.png")} alt="Phoenix Framework Logo" />
         </a>
       </section>
     </header>

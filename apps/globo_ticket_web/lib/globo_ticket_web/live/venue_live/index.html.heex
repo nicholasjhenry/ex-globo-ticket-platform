@@ -2,14 +2,7 @@
 
 <%= if @live_action in [:new, :edit] do %>
   <.modal return_to={Routes.venue_index_path(@socket, :index)}>
-    <.live_component
-      module={GloboTicketWeb.VenueLive.FormComponent}
-      id={@venue.id || :new}
-      title={@page_title}
-      action={@live_action}
-      venue={@venue}
-      return_to={Routes.venue_index_path(@socket, :index)}
-    />
+    <.live_component module={GloboTicketWeb.VenueLive.FormComponent} id={@venue.id || :new} title={@page_title} action={@live_action} venue={@venue} return_to={Routes.venue_index_path(@socket, :index)} />
   </.modal>
 <% end %>
 

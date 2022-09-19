@@ -39,7 +39,7 @@ defmodule GloboTicketWeb.MixProject do
       {:phoenix_html, "~> 3.0"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_live_view, "~> 0.17.5"},
-      {:floki, ">= 0.30.0", only: :test},
+      {:floki, ">= 0.30.0", only: [:dev, :test]},
       {:phoenix_live_dashboard, "~> 0.6"},
       {:esbuild, "~> 0.4", runtime: Mix.env() == :dev},
       {:telemetry_metrics, "~> 0.6"},
@@ -52,7 +52,7 @@ defmodule GloboTicketWeb.MixProject do
 
   defp project_deps do
     [
-      {:assert_html, ">= 0.0.1", only: :test},
+      {:assert_html, ">= 0.0.1", only: [:dev, :test]},
       {:globo_ticket, in_umbrella: true}
     ]
   end

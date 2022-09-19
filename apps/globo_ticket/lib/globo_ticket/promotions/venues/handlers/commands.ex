@@ -12,7 +12,7 @@ defmodule GloboTicket.Promotions.Venues.Handlers.Commands do
   def save_venue(venue_info) do
     venue = %Records.Venue{uuid: venue_info.id}
 
-    with {:ok, venue} <- Emu.Repo.save_entity_record(venue) do
+    with {:ok, venue} <- Emu.Store.save_entity_record(venue) do
       venue =
         Records.Venue
         |> preload_venue()
@@ -22,16 +22,16 @@ defmodule GloboTicket.Promotions.Venues.Handlers.Commands do
       location = Venues.Venue.to_location_record(venue_info, venue)
       time_zone = Venues.Venue.to_time_zone_record(venue_info, venue)
 
-      with {:ok, _} <- Emu.Repo.save_snapshot(venue_info, venue.description, description),
+      with {:ok, _} <- Emu.Store.save_snapshot(venue_info, venue.description, description),
            {:ok, _} <-
-             Emu.Repo.save_snapshot(
+             Emu.Store.save_snapshot(
                venue_info,
                venue.location,
                location,
                :location_last_updated_ticks
              ),
            {:ok, _} <-
-             Emu.Repo.save_snapshot(
+             Emu.Store.save_snapshot(
                venue_info,
                venue.time_zone,
                time_zone,
@@ -44,7 +44,7 @@ defmodule GloboTicket.Promotions.Venues.Handlers.Commands do
 
   def delete_venue(venue_uuid) do
     venue = Repo.get_by(Records.Venue, uuid: venue_uuid)
-    Emu.Repo.soft_delete(venue)
+    Emu.Store.soft_delete(venue)
   end
 
   defp preload_venue(query) do

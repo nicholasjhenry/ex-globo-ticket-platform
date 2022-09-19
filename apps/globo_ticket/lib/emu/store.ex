@@ -1,4 +1,4 @@
-defmodule Emu.Repo do
+defmodule Emu.Store do
   @moduledoc """
   Supports the implementation of the Snapshot and Tombstone patterns.
   """

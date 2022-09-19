@@ -6,9 +6,9 @@ defmodule GloboTicketWeb.VenueLiveTest do
   alias GloboTicket.Promotions.Venues
 
   defp create_venue(_context) do
-    venue = Venues.Controls.VenueInfo.example()
-    {:ok, _venue} = Venues.VenueCommands.save_venue(venue.id, venue)
-    %{venue: venue}
+    venue_info = Venues.Controls.VenueInfo.example()
+    {:ok, _venue} = Venues.VenueCommands.save_venue(venue_info)
+    %{venue: venue_info}
   end
 
   describe "Index" do

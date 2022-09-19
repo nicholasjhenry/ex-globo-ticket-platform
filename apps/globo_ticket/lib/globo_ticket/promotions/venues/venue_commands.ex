@@ -8,8 +8,8 @@ defmodule GloboTicket.Promotions.Venues.VenueCommands do
   alias Emu.Snapshot
   alias GloboTicket.Promotions.Venues
 
-  def save_venue(uuid, venue_info) do
-    venue = %Venues.Venue{uuid: uuid}
+  def save_venue(venue_info) do
+    venue = %Venues.Venue{uuid: venue_info.id}
 
     with {:ok, venue} <- Emu.Repo.save_entity_record(venue) do
       venue =

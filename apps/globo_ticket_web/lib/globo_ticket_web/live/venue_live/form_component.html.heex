@@ -2,25 +2,35 @@
   <h2><%= @title %></h2>
 
   <.form let={f} for={@changeset} id="venue-form" as="venue" phx-target={@myself} phx-change="validate" phx-submit="save">
-    <%= label(f, :name) %>
-    <%= text_input(f, :name) %>
-    <%= error_tag(f, :name) %>
+    <div data-venue-name>
+      <%= label(f, :name) %>
+      <%= text_input(f, :name) %>
+      <%= error_tag(f, :name) %>
+    </div>
 
-    <%= label(f, :city) %>
-    <%= text_input(f, :city) %>
-    <%= error_tag(f, :city) %>
+    <div data-venue-city>
+      <%= label(f, :city) %>
+      <%= text_input(f, :city) %>
+      <%= error_tag(f, :city) %>
+    </div>
 
+    <div data-venue-latitude>
     <%= label(f, :latitude) %>
     <%= number_input(f, :latitude) %>
     <%= error_tag(f, :latitude) %>
+    </div>
 
+    <div data-venue-longitude>
     <%= label(f, :longitude) %>
     <%= number_input(f, :longitude) %>
     <%= error_tag(f, :longitude) %>
+    </div>
 
+    <div data-venue-time-zone>
     <%= label(f, :time_zone) %>
     <%= text_input(f, :time_zone) %>
     <%= error_tag(f, :time_zone) %>
+    </div>
 
     <div>
       <%= submit("Save", phx_disable_with: "Saving...") %>

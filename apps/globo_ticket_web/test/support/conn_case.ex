@@ -22,4 +22,9 @@ defmodule GloboTicketWeb.ConnCase do
     GloboTicket.DataCase.setup_sandbox(tags)
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
+
+  def html_escape(unsafe) do
+    {:safe, io_data} = Phoenix.HTML.html_escape(unsafe)
+    to_string(io_data)
+  end
 end

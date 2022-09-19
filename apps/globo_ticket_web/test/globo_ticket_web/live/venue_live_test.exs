@@ -26,16 +26,19 @@ defmodule GloboTicketWeb.VenueLiveTest do
       id = Identifier.Uuid.Controls.Static.example()
       {:ok, index_live, _html} = live(conn, Routes.venue_index_path(conn, :index, id: id))
 
-      assert index_live |> element("a", "New Venue") |> render_click() =~
-               "New Venue"
+      html = index_live |> element("a", "New Venue") |> render_click()
+      assert_html(html, "h2", "New Venue")
 
       assert_patch(index_live, Routes.venue_index_path(conn, :new, id))
 
       invalid_attrs = %{}
 
-      assert index_live
-             |> form("#venue-form", venue: invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+      html =
+        index_live
+        |> form("#venue-form", venue: invalid_attrs)
+        |> render_change()
+
+      assert_html(html, "[data-venue-name] [data-error]", html_escape("can't be blank"))
 
       create_attrs = Venues.Controls.Venue.Attrs.valid()
 
@@ -53,16 +56,14 @@ defmodule GloboTicketWeb.VenueLiveTest do
     test "updates venue in listing", %{conn: conn, venue: venue} do
       {:ok, index_live, _html} = live(conn, Routes.venue_index_path(conn, :index))
 
-      assert index_live |> element("#venue-#{venue.id} a", "Edit") |> render_click() =~
-               "Edit Venue"
+      html = index_live |> element("#venue-#{venue.id} a", "Edit") |> render_click()
+      assert_html(html, "h2", "Edit Venue")
 
       assert_patch(index_live, Routes.venue_index_path(conn, :edit, venue))
 
-      invalid_attrs = Venues.Controls.Venue.Attrs.invalid(name: "Changed Name")
-
-      assert index_live
-             |> form("#venue-form", venue: invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+      invalid_attrs = Venues.Controls.Venue.Attrs.invalid()
+      html = index_live |> form("#venue-form", venue: invalid_attrs) |> render_change()
+      assert_html(html, "[data-venue-name] [data-error]", html_escape("can't be blank"))
 
       update_attrs = Venues.Controls.Venue.Attrs.valid(name: "Changed Name")
 
@@ -104,11 +105,9 @@ defmodule GloboTicketWeb.VenueLiveTest do
 
       assert_patch(show_live, Routes.venue_show_path(conn, :edit, venue))
 
-      invalid_attrs = Venues.Controls.Venue.Attrs.invalid(name: "Changed Name")
-
-      assert show_live
-             |> form("#venue-form", venue: invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+      invalid_attrs = Venues.Controls.Venue.Attrs.invalid()
+      html = show_live |> form("#venue-form", venue: invalid_attrs) |> render_change()
+      assert_html(html, "[data-venue-name] [data-error]", html_escape("can't be blank"))
 
       update_attrs = Venues.Controls.Venue.Attrs.valid(name: "Changed Name")
 

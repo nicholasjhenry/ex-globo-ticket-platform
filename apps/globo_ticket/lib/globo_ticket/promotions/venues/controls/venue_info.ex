@@ -6,7 +6,7 @@ defmodule GloboTicket.Promotions.Venues.Controls.VenueInfo do
 
   def example(attrs \\ %{}) do
     defaults = %{
-      id: Identifier.Uuid.Controls.Random.example(),
+      id: Identifier.Uuid.Controls.Static.example(),
       name: "American Airlines Center",
       city: "Montreal",
       last_updated_ticks: Ticks.zero(),

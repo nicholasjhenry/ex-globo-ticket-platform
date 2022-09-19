@@ -1,4 +1,4 @@
-defmodule GloboTicket.Promotions.Venues.VenueTimeZone do
+defmodule GloboTicket.Promotions.Venues.Records.VenueTimeZone do
   @moduledoc false
 
   use GloboTicket.Schema

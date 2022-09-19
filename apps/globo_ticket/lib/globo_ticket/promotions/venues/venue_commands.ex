@@ -7,13 +7,14 @@ defmodule GloboTicket.Promotions.Venues.VenueCommands do
 
   alias Emu.Snapshot
   alias GloboTicket.Promotions.Venues
+  alias GloboTicket.Promotions.Venues.Records
 
   def save_venue(venue_info) do
-    venue = %Venues.Venue{uuid: venue_info.id}
+    venue = %Records.Venue{uuid: venue_info.id}
 
     with {:ok, venue} <- Emu.Repo.save_entity_record(venue) do
       venue =
-        Venues.Venue
+        Records.Venue
         |> preload_venue()
         |> Repo.get_by(uuid: venue.uuid)
 
@@ -42,14 +43,14 @@ defmodule GloboTicket.Promotions.Venues.VenueCommands do
   end
 
   def delete_venue(venue_uuid) do
-    venue = Repo.get_by(Venues.Venue, uuid: venue_uuid)
+    venue = Repo.get_by(Records.Venue, uuid: venue_uuid)
     Emu.Repo.soft_delete(venue)
   end
 
   defp preload_venue(query) do
     query
-    |> preload([venue], description: ^Snapshot.last_snapshot(Venues.VenueDescription, :venue_id))
-    |> preload([venue], location: ^Snapshot.last_snapshot(Venues.VenueLocation, :venue_id))
-    |> preload([venue], time_zone: ^Snapshot.last_snapshot(Venues.VenueTimeZone, :venue_id))
+    |> preload([venue], description: ^Snapshot.last_snapshot(Records.VenueDescription, :venue_id))
+    |> preload([venue], location: ^Snapshot.last_snapshot(Records.VenueLocation, :venue_id))
+    |> preload([venue], time_zone: ^Snapshot.last_snapshot(Records.VenueTimeZone, :venue_id))
   end
 end

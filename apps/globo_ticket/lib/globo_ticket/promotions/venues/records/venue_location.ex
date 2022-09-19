@@ -1,4 +1,4 @@
-defmodule GloboTicket.Promotions.Venues.VenueLocation do
+defmodule GloboTicket.Promotions.Venues.Records.VenueLocation do
   @moduledoc false
 
   use GloboTicket.Schema

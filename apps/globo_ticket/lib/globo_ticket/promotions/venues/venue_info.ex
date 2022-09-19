@@ -2,7 +2,7 @@ defmodule GloboTicket.Promotions.Venues.VenueInfo do
   @moduledoc false
 
   alias Emu.Ticks
-  alias GloboTicket.Promotions.Venues
+  alias GloboTicket.Promotions.Venues.Records
 
   use GloboTicket.Schema
 
@@ -32,7 +32,7 @@ defmodule GloboTicket.Promotions.Venues.VenueInfo do
   def from_record(nil), do: nil
 
   def from_record(record) do
-    %Venues.VenueInfo{
+    %__MODULE__{
       id: record.uuid,
       name: record.description.name,
       city: record.description.city,
@@ -46,7 +46,7 @@ defmodule GloboTicket.Promotions.Venues.VenueInfo do
   end
 
   def to_description_record(venue_info, venue) do
-    %Venues.VenueDescription{
+    %Records.VenueDescription{
       venue_id: venue.id,
       name: venue_info.name,
       city: venue_info.city
@@ -54,7 +54,7 @@ defmodule GloboTicket.Promotions.Venues.VenueInfo do
   end
 
   def to_location_record(venue_info, venue) do
-    %Venues.VenueLocation{
+    %Records.VenueLocation{
       venue_id: venue.id,
       latitude: venue_info.latitude,
       longitude: venue_info.longitude
@@ -62,7 +62,7 @@ defmodule GloboTicket.Promotions.Venues.VenueInfo do
   end
 
   def to_time_zone_record(venue_info, venue) do
-    %Venues.VenueTimeZone{
+    %Records.VenueTimeZone{
       venue_id: venue.id,
       time_zone: venue_info.time_zone
     }

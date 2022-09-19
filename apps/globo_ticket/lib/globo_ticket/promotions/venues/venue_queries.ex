@@ -6,11 +6,12 @@ defmodule GloboTicket.Promotions.Venues.VenueQueries do
   alias Emu.Snapshot
   alias Emu.Tombstone
   alias GloboTicket.Promotions.Venues
+  alias GloboTicket.Promotions.Venues.Records
 
   use GloboTicket.QueryHandler
 
   def get_venue!(uuid) do
-    Venues.Venue
+    Records.Venue
     |> preload_venue()
     |> Tombstone.present()
     |> Repo.get_by!(uuid: uuid)
@@ -18,7 +19,7 @@ defmodule GloboTicket.Promotions.Venues.VenueQueries do
   end
 
   def list_venues do
-    Venues.Venue
+    Records.Venue
     |> preload_venue()
     |> Tombstone.present()
     |> Repo.all()
@@ -27,8 +28,8 @@ defmodule GloboTicket.Promotions.Venues.VenueQueries do
 
   defp preload_venue(query) do
     query
-    |> preload([venue], description: ^Snapshot.last_snapshot(Venues.VenueDescription, :venue_id))
-    |> preload([venue], location: ^Snapshot.last_snapshot(Venues.VenueLocation, :venue_id))
-    |> preload([venue], time_zone: ^Snapshot.last_snapshot(Venues.VenueTimeZone, :venue_id))
+    |> preload([venue], description: ^Snapshot.last_snapshot(Records.VenueDescription, :venue_id))
+    |> preload([venue], location: ^Snapshot.last_snapshot(Records.VenueLocation, :venue_id))
+    |> preload([venue], time_zone: ^Snapshot.last_snapshot(Records.VenueTimeZone, :venue_id))
   end
 end

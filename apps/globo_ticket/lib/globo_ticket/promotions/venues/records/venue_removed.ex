@@ -1,4 +1,4 @@
-defmodule GloboTicket.Promotions.Venues.VenueRemoved do
+defmodule GloboTicket.Promotions.Venues.Records.VenueRemoved do
   @moduledoc false
   use GloboTicket.Schema
 

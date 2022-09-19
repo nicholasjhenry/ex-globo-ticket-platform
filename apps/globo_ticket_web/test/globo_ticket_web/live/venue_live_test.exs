@@ -17,24 +17,22 @@ defmodule GloboTicketWeb.VenueLiveTest do
     setup [:create_venue]
 
     test "lists all venues", %{conn: conn, venue: venue} do
-      {:ok, _index_live, html} = live(conn, Routes.venue_index_path(conn, :index))
+      {:ok, _index_live, html} = list_venues(conn)
 
       html
       |> assert_html("h1", "Listing Venues")
-      |> assert_html("[data-venue-name]", venue.name)
+      |> assert_html("[data-venue-id=#{venue.id}] [data-venue-name]", venue.name)
     end
 
     test "saves new venue", %{conn: conn} do
-      id = Identifier.Uuid.Controls.Static.example()
-      {:ok, index_live, _html} = live(conn, Routes.venue_index_path(conn, :index, id: id))
+      venue_id = Identifier.Uuid.Controls.Random.example()
+      {:ok, index_live, _html} = list_venues(conn, id: venue_id)
 
-      html =
-        index_live
-        |> element("[data-action=venue-new]")
-        |> render_click()
+      index_live
+      |> new_venue()
+      |> assert_html("h2", "New Venue")
 
-      assert_html(html, "h2", "New Venue")
-      assert_patch(index_live, Routes.venue_index_path(conn, :new, id))
+      assert_patch(index_live, Routes.venue_index_path(conn, :new, venue_id))
 
       html =
         index_live
@@ -53,18 +51,16 @@ defmodule GloboTicketWeb.VenueLiveTest do
 
       html
       |> assert_html("[data-flash-info]", "Venue created successfully")
-      |> assert_html("[data-venue-name]", create_attrs.name)
+      |> assert_html("[data-venue-id=#{venue_id}] [data-venue-name]", create_attrs.name)
     end
 
     test "updates venue in listing", %{conn: conn, venue: venue} do
-      {:ok, index_live, _html} = live(conn, Routes.venue_index_path(conn, :index))
+      {:ok, index_live, _html} = list_venues(conn)
 
-      html =
-        index_live
-        |> element("[data-venue-id=#{venue.id}] [data-action=venue-edit]")
-        |> render_click()
+      index_live
+      |> edit_venue(venue)
+      |> assert_html("h2", "Edit Venue")
 
-      assert_html(html, "h2", "Edit Venue")
       assert_patch(index_live, Routes.venue_index_path(conn, :edit, venue))
 
       html =
@@ -88,13 +84,11 @@ defmodule GloboTicketWeb.VenueLiveTest do
     end
 
     test "deletes venue in listing", %{conn: conn, venue: venue} do
-      {:ok, index_live, _html} = live(conn, Routes.venue_index_path(conn, :index))
+      {:ok, index_live, _html} = list_venues(conn)
 
-      assert index_live
-             |> element("[data-venue-id=#{venue.id}] [data-action=venue-delete]")
-             |> render_click()
-
-      refute has_element?(index_live, "[data-venue-id=#{venue.id}]")
+      index_live
+      |> delete_venue(venue)
+      |> refute_html("[data-venue-id=#{venue.id}] [data-venue-name]", venue.name)
     end
   end
 
@@ -102,7 +96,7 @@ defmodule GloboTicketWeb.VenueLiveTest do
     setup [:create_venue]
 
     test "displays venue", %{conn: conn, venue: venue} do
-      {:ok, _show_live, html} = live(conn, Routes.venue_show_path(conn, :show, venue))
+      {:ok, _show_live, html} = show_venue(conn, venue)
 
       html
       |> assert_html("h1", "Show Venue")
@@ -110,7 +104,7 @@ defmodule GloboTicketWeb.VenueLiveTest do
     end
 
     test "updates venue within modal", %{conn: conn, venue: venue} do
-      {:ok, show_live, _html} = live(conn, Routes.venue_show_path(conn, :show, venue))
+      {:ok, show_live, _html} = show_venue(conn, venue)
 
       html =
         show_live
@@ -139,5 +133,31 @@ defmodule GloboTicketWeb.VenueLiveTest do
       |> assert_html("[data-flash-info]", "Venue updated successfully")
       |> assert_html("[data-venue-name]", update_attrs.name)
     end
+  end
+
+  defp list_venues(conn, params \\ %{}) do
+    live(conn, Routes.venue_index_path(conn, :index, params))
+  end
+
+  defp show_venue(conn, venue) do
+    live(conn, Routes.venue_show_path(conn, :show, venue))
+  end
+
+  defp new_venue(live) do
+    live
+    |> element("[data-action=venue-new]")
+    |> render_click()
+  end
+
+  defp edit_venue(live, venue) do
+    live
+    |> element("[data-venue-id=#{venue.id}] [data-action=venue-edit]")
+    |> render_click()
+  end
+
+  defp delete_venue(live, venue) do
+    live
+    |> element("[data-venue-id=#{venue.id}] [data-action=venue-delete]")
+    |> render_click()
   end
 end

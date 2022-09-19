@@ -21,6 +21,23 @@ defmodule GloboTicket.Promotions.Venues.Controls.VenueInfo do
     struct!(Venues.VenueInfo, attrs)
   end
 
+  def generate(attrs \\ %{}) do
+    defaults = %{
+      id: Identifier.Uuid.Controls.Random.example(),
+      name: Faker.Company.name() <> " Center",
+      city: Faker.Address.city(),
+      last_updated_ticks: Ticks.zero(),
+      latitude: Faker.Address.latitude(),
+      longitude: Faker.Address.longitude(),
+      location_last_updated_ticks: Ticks.zero(),
+      time_zone: "America/Toronto",
+      time_zone_last_updated_ticks: Ticks.zero()
+    }
+
+    attrs = Enum.into(attrs, defaults)
+    struct!(Venues.VenueInfo, attrs)
+  end
+
   defmodule Attrs do
     @moduledoc false
 

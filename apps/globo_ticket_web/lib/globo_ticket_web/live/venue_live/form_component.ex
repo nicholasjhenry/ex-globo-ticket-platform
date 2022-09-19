@@ -42,4 +42,18 @@ defmodule GloboTicketWeb.VenueLive.FormComponent do
         {:noreply, assign(socket, changeset: changeset)}
     end
   end
+
+  defp save_venue(socket, :edit, venue_params) do
+    with {:ok, venue} <-
+           Venues.VenueInfo.from_params(socket.assigns.venue, venue_params),
+         {:ok, _venue} <- Venues.VenueCommands.save_venue(venue) do
+      {:noreply,
+       socket
+       |> put_flash(:info, "Venue updated successfully")
+       |> push_redirect(to: socket.assigns.return_to)}
+    else
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, changeset: changeset)}
+    end
+  end
 end

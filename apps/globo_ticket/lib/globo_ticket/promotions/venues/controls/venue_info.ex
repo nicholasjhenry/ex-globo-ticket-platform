@@ -36,5 +36,18 @@ defmodule GloboTicket.Promotions.Venues.Controls.VenueInfo do
 
       Enum.into(attrs, defaults)
     end
+
+    def invalid(attrs \\ %{}) do
+      defaults = %{
+        id: Identifier.Uuid.Controls.Random.example(),
+        name: nil,
+        city: nil,
+        latitude: nil,
+        longitude: nil,
+        time_zone: nil
+      }
+
+      Enum.into(attrs, defaults)
+    end
   end
 end

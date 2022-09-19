@@ -32,6 +32,12 @@ defmodule GloboTicketWeb.VenueLive.Index do
     |> assign(:id, :new)
   end
 
+  defp apply_action(socket, :edit, %{"id" => id}) do
+    socket
+    |> assign(:page_title, "Edit Venue")
+    |> assign(:venue, Venues.VenueQueries.get_venue(id))
+  end
+
   defp list_venues do
     Venues.VenueQueries.list_venues()
   end

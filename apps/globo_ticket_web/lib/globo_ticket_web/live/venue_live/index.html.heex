@@ -33,7 +33,7 @@
         <td><%= venue.time_zone %></td>
 
         <td>
-        TODO: Add actions
+          <span><%= live_patch "Edit", to: Routes.venue_index_path(@socket, :edit, venue) %></span>
         </td>
       </tr>
     <% end %>

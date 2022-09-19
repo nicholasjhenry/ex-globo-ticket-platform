@@ -38,6 +38,13 @@ defmodule GloboTicketWeb.VenueLive.Index do
     |> assign(:venue, Venues.VenueQueries.get_venue(id))
   end
 
+  @impl true
+  def handle_event("delete", %{"id" => id}, socket) do
+    {:ok, _} = Venues.VenueCommands.delete_venue(id)
+
+    {:noreply, assign(socket, :venues, list_venues())}
+  end
+
   defp list_venues do
     Venues.VenueQueries.list_venues()
   end

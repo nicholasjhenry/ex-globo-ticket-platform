@@ -71,5 +71,12 @@ defmodule GloboTicketWeb.VenueLiveTest do
       assert html =~ "Venue updated successfully"
       assert html =~ "Changed Name"
     end
+
+    test "deletes venue in listing", %{conn: conn, venue: venue} do
+      {:ok, index_live, _html} = live(conn, Routes.venue_index_path(conn, :index))
+
+      assert index_live |> element("#venue-#{venue.id} a", "Delete") |> render_click()
+      # refute has_element?(index_live, "#user-#{user.id}")
+    end
   end
 end

@@ -20,8 +20,14 @@ defmodule Emu.Store do
     Repo.insert(next_snapshot)
   end
 
-  def save_snapshot(entity, last_snapshot, next_snapshot, field \\ :last_updated_ticks) do
-    if next_snapshot.__struct__.equal?(last_snapshot, next_snapshot) do
+  def save_snapshot(entity, record, assoc, field \\ :last_updated_ticks) do
+    assoc_schema = record.__struct__.__schema__(:association, assoc).related
+
+    last_snapshot = Map.fetch!(record, assoc) || struct(assoc_schema)
+    struct = last_snapshot.__struct__
+    next_snapshot = struct.from_entity(entity, record)
+
+    if struct.equal?(last_snapshot, next_snapshot) do
       {:ok, last_snapshot}
     else
       entity

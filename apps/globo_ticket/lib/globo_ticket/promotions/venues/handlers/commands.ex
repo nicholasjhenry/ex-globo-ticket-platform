@@ -17,23 +17,14 @@ defmodule GloboTicket.Promotions.Venues.Handlers.Commands do
         |> Venues.Query.snapshots_query()
         |> Repo.get_by(uuid: venue.uuid)
 
-      description = Records.VenueDescription.from_entity(venue_info, venue)
-      location = Records.VenueLocation.from_entity(venue_info, venue)
-      time_zone = Records.VenueTimeZone.from_entity(venue_info, venue)
-
-      with {:ok, _} <- Emu.Store.save_snapshot(venue_info, venue.description, description),
+      with {:ok, _} <- Emu.Store.save_snapshot(venue_info, venue, :description),
+           {:ok, _} <-
+             Emu.Store.save_snapshot(venue_info, venue, :location, :location_last_updated_ticks),
            {:ok, _} <-
              Emu.Store.save_snapshot(
                venue_info,
-               venue.location,
-               location,
-               :location_last_updated_ticks
-             ),
-           {:ok, _} <-
-             Emu.Store.save_snapshot(
-               venue_info,
-               venue.time_zone,
-               time_zone,
+               venue,
+               :time_zone,
                :time_zone_last_updated_ticks
              ) do
         {:ok, venue_info}

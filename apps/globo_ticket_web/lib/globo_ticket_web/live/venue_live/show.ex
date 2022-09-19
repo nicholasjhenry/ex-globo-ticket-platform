@@ -13,7 +13,7 @@ defmodule GloboTicketWeb.VenueLive.Show do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:venue, Venues.Handlers.Queries.get_venue!(id))}
+     |> assign(:venue, Venues.Store.get_venue!(id))}
   end
 
   defp page_title(:show), do: "Show Venue"

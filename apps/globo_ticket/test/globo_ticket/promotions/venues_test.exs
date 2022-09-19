@@ -34,18 +34,18 @@ defmodule GloboTicket.Promotions.VenuesTest do
 
     _result = Venues.Handlers.Commands.save_venue(venue_info)
 
-    venue = Venues.Handlers.Queries.get_venue!(venue_info.id)
+    venue = Venues.Store.get_venue!(venue_info.id)
     assert venue.name == "American Airlines Center"
   end
 
   test "when set venue description to the same description then nothing is saved" do
     venue_info = Venues.Controls.Venue.example(name: "American Airlines Center")
     _result = Venues.Handlers.Commands.save_venue(venue_info)
-    first_snapshot = Venues.Handlers.Queries.get_venue!(venue_info.id)
+    first_snapshot = Venues.Store.get_venue!(venue_info.id)
 
     _result = Venues.Handlers.Commands.save_venue(venue_info)
 
-    second_snapshot = Venues.Handlers.Queries.get_venue!(venue_info.id)
+    second_snapshot = Venues.Store.get_venue!(venue_info.id)
     assert second_snapshot.last_updated_ticks == first_snapshot.last_updated_ticks
   end
 
@@ -53,7 +53,7 @@ defmodule GloboTicket.Promotions.VenuesTest do
     venue_info = Venues.Controls.Venue.example(name: "American Airlines Center")
 
     _result = Venues.Handlers.Commands.save_venue(venue_info)
-    venue = Venues.Handlers.Queries.get_venue!(venue_info.id)
+    venue = Venues.Store.get_venue!(venue_info.id)
 
     venue_info =
       Venues.Controls.Venue.example(
@@ -83,7 +83,7 @@ defmodule GloboTicket.Promotions.VenuesTest do
 
     _result = Venues.Handlers.Commands.save_venue(venue_info)
 
-    venue = Venues.Handlers.Queries.get_venue!(venue_info.id)
+    venue = Venues.Store.get_venue!(venue_info.id)
     assert venue.latitude == 45.508888
     assert venue.longitude == -73.561668
   end
@@ -93,7 +93,7 @@ defmodule GloboTicket.Promotions.VenuesTest do
 
     _result = Venues.Handlers.Commands.save_venue(venue_info)
 
-    venue = Venues.Handlers.Queries.get_venue!(venue_info.id)
+    venue = Venues.Store.get_venue!(venue_info.id)
     assert venue.time_zone == "America/Toronto"
   end
 
@@ -103,6 +103,6 @@ defmodule GloboTicket.Promotions.VenuesTest do
 
     _result = Venues.Handlers.Commands.delete_venue(venue_info.id)
 
-    assert_raise Ecto.NoResultsError, fn -> Venues.Handlers.Queries.get_venue!(venue_info.id) end
+    assert_raise Ecto.NoResultsError, fn -> Venues.Store.get_venue!(venue_info.id) end
   end
 end

@@ -19,7 +19,7 @@
 </ul>
 
 <span>
-  <%= live_patch("Edit", to: Routes.venue_show_path(@socket, :edit, @venue), class: "button") %>
+  <%= live_patch("Edit", to: Routes.venue_show_path(@socket, :edit, @venue), class: "button", data: [action: "venue-edit"]) %>
 </span>
 |
 <span><%= live_redirect("Back", to: Routes.venue_index_path(@socket, :index)) %></span>

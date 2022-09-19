@@ -27,17 +27,17 @@
 
         <td>
           <span>
-            <%= live_redirect("Show", to: Routes.venue_show_path(@socket, :show, venue)) %>
+            <%= live_redirect("Show", to: Routes.venue_show_path(@socket, :show, venue), data: [action: "venue-show"]) %>
           </span>
           <span>
-            <%= live_patch("Edit", to: Routes.venue_index_path(@socket, :edit, venue)) %>
+            <%= live_patch("Edit", to: Routes.venue_index_path(@socket, :edit, venue), data: [action: "venue-edit"]) %>
           </span>
           <span>
             <%= link("Delete",
               to: "#",
               phx_click: "delete",
               phx_value_id: venue.id,
-              data: [confirm: "Are you sure?"]
+              data: [confirm: "Are you sure?", action: "venue-delete"]
             ) %>
           </span>
         </td>
@@ -46,4 +46,4 @@
   </tbody>
 </table>
 
-<span><%= live_patch("New Venue", to: Routes.venue_index_path(@socket, :new, @id)) %></span>
+<span><%= live_patch("New Venue", to: Routes.venue_index_path(@socket, :new, @id), data: [action: "venue-new"]) %></span>

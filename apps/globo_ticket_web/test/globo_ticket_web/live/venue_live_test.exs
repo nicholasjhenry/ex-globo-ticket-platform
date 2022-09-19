@@ -5,7 +5,7 @@ defmodule GloboTicketWeb.VenueLiveTest do
 
   alias GloboTicket.Promotions.Venues
 
-  @form "[data-venue-form]"
+  @form_identifier "[data-venue-form]"
 
   defp create_venue(_context) do
     venue_info = Venues.Controls.Venue.example()
@@ -28,16 +28,17 @@ defmodule GloboTicketWeb.VenueLiveTest do
       id = Identifier.Uuid.Controls.Static.example()
       {:ok, index_live, _html} = live(conn, Routes.venue_index_path(conn, :index, id: id))
 
-      html = index_live |> element("a", "New Venue") |> render_click()
+      html =
+        index_live
+        |> element("[data-action=venue-new]")
+        |> render_click()
+
       assert_html(html, "h2", "New Venue")
-
       assert_patch(index_live, Routes.venue_index_path(conn, :new, id))
-
-      invalid_attrs = %{}
 
       html =
         index_live
-        |> form(@form, venue: invalid_attrs)
+        |> form(@form_identifier, venue: Venues.Controls.Venue.Attrs.invalid())
         |> render_change()
 
       assert_html(html, "[data-venue-name] [data-error]", html_escape("can't be blank"))
@@ -46,7 +47,7 @@ defmodule GloboTicketWeb.VenueLiveTest do
 
       {:ok, _, html} =
         index_live
-        |> form(@form, venue: create_attrs)
+        |> form(@form_identifier, venue: create_attrs)
         |> render_submit()
         |> follow_redirect(conn, Routes.venue_index_path(conn, :index))
 
@@ -58,32 +59,41 @@ defmodule GloboTicketWeb.VenueLiveTest do
     test "updates venue in listing", %{conn: conn, venue: venue} do
       {:ok, index_live, _html} = live(conn, Routes.venue_index_path(conn, :index))
 
-      html = index_live |> element("[data-venue-id=#{venue.id}] a", "Edit") |> render_click()
-      assert_html(html, "h2", "Edit Venue")
+      html =
+        index_live
+        |> element("[data-venue-id=#{venue.id}] [data-action=venue-edit]")
+        |> render_click()
 
+      assert_html(html, "h2", "Edit Venue")
       assert_patch(index_live, Routes.venue_index_path(conn, :edit, venue))
 
-      invalid_attrs = Venues.Controls.Venue.Attrs.invalid()
-      html = index_live |> form(@form, venue: invalid_attrs) |> render_change()
+      html =
+        index_live
+        |> form(@form_identifier, venue: Venues.Controls.Venue.Attrs.invalid())
+        |> render_change()
+
       assert_html(html, "[data-venue-name] [data-error]", html_escape("can't be blank"))
 
       update_attrs = Venues.Controls.Venue.Attrs.valid(name: "Changed Name")
 
       {:ok, _, html} =
         index_live
-        |> form(@form, venue: update_attrs)
+        |> form(@form_identifier, venue: update_attrs)
         |> render_submit()
         |> follow_redirect(conn, Routes.venue_index_path(conn, :index))
 
       html
       |> assert_html("[data-flash-info]", "Venue updated successfully")
-      |> assert_html("[data-venue-name]", "Changed Name")
+      |> assert_html("[data-venue-name]", update_attrs.name)
     end
 
     test "deletes venue in listing", %{conn: conn, venue: venue} do
       {:ok, index_live, _html} = live(conn, Routes.venue_index_path(conn, :index))
 
-      assert index_live |> element("[data-venue-id=#{venue.id}] a", "Delete") |> render_click()
+      assert index_live
+             |> element("[data-venue-id=#{venue.id}] [data-action=venue-delete]")
+             |> render_click()
+
       refute has_element?(index_live, "[data-venue-id=#{venue.id}]")
     end
   end
@@ -102,26 +112,32 @@ defmodule GloboTicketWeb.VenueLiveTest do
     test "updates venue within modal", %{conn: conn, venue: venue} do
       {:ok, show_live, _html} = live(conn, Routes.venue_show_path(conn, :show, venue))
 
-      html = show_live |> element("a", "Edit") |> render_click()
-      assert_html(html, "h2", "Edit Venue")
+      html =
+        show_live
+        |> element("[data-action=venue-edit]")
+        |> render_click()
 
+      assert_html(html, "h2", "Edit Venue")
       assert_patch(show_live, Routes.venue_show_path(conn, :edit, venue))
 
-      invalid_attrs = Venues.Controls.Venue.Attrs.invalid()
-      html = show_live |> form(@form, venue: invalid_attrs) |> render_change()
+      html =
+        show_live
+        |> form(@form_identifier, venue: Venues.Controls.Venue.Attrs.invalid())
+        |> render_change()
+
       assert_html(html, "[data-venue-name] [data-error]", html_escape("can't be blank"))
 
       update_attrs = Venues.Controls.Venue.Attrs.valid(name: "Changed Name")
 
       {:ok, _, html} =
         show_live
-        |> form(@form, venue: update_attrs)
+        |> form(@form_identifier, venue: update_attrs)
         |> render_submit()
         |> follow_redirect(conn, Routes.venue_show_path(conn, :show, venue))
 
       html
       |> assert_html("[data-flash-info]", "Venue updated successfully")
-      |> assert_html("[data-venue-name]", "Changed Name")
+      |> assert_html("[data-venue-name]", update_attrs.name)
     end
   end
 end

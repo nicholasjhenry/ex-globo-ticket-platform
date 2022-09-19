@@ -1,4 +1,4 @@
-defmodule GloboTicket.Promotions.Venues.VenueQueries do
+defmodule GloboTicket.Promotions.Venues.Handlers.Queries do
   @moduledoc """
   Handles queries for venues.
   """

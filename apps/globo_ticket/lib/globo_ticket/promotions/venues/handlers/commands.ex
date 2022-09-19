@@ -1,4 +1,4 @@
-defmodule GloboTicket.Promotions.Venues.VenueCommands do
+defmodule GloboTicket.Promotions.Venues.Handlers.Commands do
   @moduledoc """
   Handles commands for venues.
   """

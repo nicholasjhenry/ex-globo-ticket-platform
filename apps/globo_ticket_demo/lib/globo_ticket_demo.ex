@@ -9,7 +9,7 @@ defmodule GloboTicketDemo do
 
   def setup_venues do
     Enum.each(1..100, fn _ ->
-      Venues.Controls.Venue.generate() |> Venues.VenueCommands.save_venue()
+      Venues.Controls.Venue.generate() |> Venues.Handlers.Commands.save_venue()
     end)
   end
 end

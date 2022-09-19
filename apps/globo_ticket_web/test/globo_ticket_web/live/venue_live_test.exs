@@ -17,8 +17,9 @@ defmodule GloboTicketWeb.VenueLiveTest do
     test "lists all venues", %{conn: conn, venue: venue} do
       {:ok, _index_live, html} = live(conn, Routes.venue_index_path(conn, :index))
 
-      assert html =~ "Listing Venues"
-      assert html =~ venue.name
+      html
+      |> assert_html("h1", "Listing Venues")
+      |> assert_html("[data-venue-name]", venue.name)
     end
 
     test "saves new venue", %{conn: conn} do
@@ -44,8 +45,9 @@ defmodule GloboTicketWeb.VenueLiveTest do
         |> render_submit()
         |> follow_redirect(conn, Routes.venue_index_path(conn, :index))
 
-      assert html =~ "Venue created successfully"
-      assert html =~ create_attrs.name
+      html
+      |> assert_html("[data-flash-info]", "Venue created successfully")
+      |> assert_html("[data-venue-name]", create_attrs.name)
     end
 
     test "updates venue in listing", %{conn: conn, venue: venue} do
@@ -56,15 +58,13 @@ defmodule GloboTicketWeb.VenueLiveTest do
 
       assert_patch(index_live, Routes.venue_index_path(conn, :edit, venue))
 
-      invalid_attrs =
-        Venues.Controls.Venue.Attrs.invalid(name: "Changed Name") |> Map.drop([:id])
+      invalid_attrs = Venues.Controls.Venue.Attrs.invalid(name: "Changed Name") |> Map.drop([:id])
 
       assert index_live
              |> form("#venue-form", venue: invalid_attrs)
              |> render_change() =~ "can&#39;t be blank"
 
-      update_attrs =
-        Venues.Controls.Venue.Attrs.valid(name: "Changed Name") |> Map.drop([:id])
+      update_attrs = Venues.Controls.Venue.Attrs.valid(name: "Changed Name") |> Map.drop([:id])
 
       {:ok, _, html} =
         index_live
@@ -72,15 +72,16 @@ defmodule GloboTicketWeb.VenueLiveTest do
         |> render_submit()
         |> follow_redirect(conn, Routes.venue_index_path(conn, :index))
 
-      assert html =~ "Venue updated successfully"
-      assert html =~ "Changed Name"
+      html
+      |> assert_html("[data-flash-info]", "Venue updated successfully")
+      |> assert_html("[data-venue-name]", "Changed Name")
     end
 
     test "deletes venue in listing", %{conn: conn, venue: venue} do
       {:ok, index_live, _html} = live(conn, Routes.venue_index_path(conn, :index))
 
       assert index_live |> element("#venue-#{venue.id} a", "Delete") |> render_click()
-      # refute has_element?(index_live, "#user-#{user.id}")
+      refute has_element?(index_live, "#venue-#{venue.id}")
     end
   end
 
@@ -90,8 +91,9 @@ defmodule GloboTicketWeb.VenueLiveTest do
     test "displays venue", %{conn: conn, venue: venue} do
       {:ok, _show_live, html} = live(conn, Routes.venue_show_path(conn, :show, venue))
 
-      assert html =~ "Show Venue"
-      assert html =~ venue.name
+      html
+      |> assert_html("h1", "Show Venue")
+      |> assert_html("[data-venue-name]", venue.name)
     end
 
     test "updates venue within modal", %{conn: conn, venue: venue} do
@@ -102,15 +104,13 @@ defmodule GloboTicketWeb.VenueLiveTest do
 
       assert_patch(show_live, Routes.venue_show_path(conn, :edit, venue))
 
-      invalid_attrs =
-        Venues.Controls.Venue.Attrs.invalid(name: "Changed Name") |> Map.drop([:id])
+      invalid_attrs = Venues.Controls.Venue.Attrs.invalid(name: "Changed Name") |> Map.drop([:id])
 
       assert show_live
              |> form("#venue-form", venue: invalid_attrs)
              |> render_change() =~ "can&#39;t be blank"
 
-      update_attrs =
-        Venues.Controls.Venue.Attrs.valid(name: "Changed Name") |> Map.drop([:id])
+      update_attrs = Venues.Controls.Venue.Attrs.valid(name: "Changed Name") |> Map.drop([:id])
 
       {:ok, _, html} =
         show_live
@@ -118,8 +118,9 @@ defmodule GloboTicketWeb.VenueLiveTest do
         |> render_submit()
         |> follow_redirect(conn, Routes.venue_show_path(conn, :show, venue))
 
-      assert html =~ "Venue updated successfully"
-      assert html =~ "Changed Name"
+      html
+      |> assert_html("[data-flash-info]", "Venue updated successfully")
+      |> assert_html("[data-venue-name]", "Changed Name")
     end
   end
 end

@@ -20,7 +20,7 @@
   <tbody id="venues">
     <%= for venue <- @venues do %>
       <tr id={"venue-#{venue.id}"}>
-        <td><%= venue.name %></td>
+        <td data-venue-name><%= venue.name %></td>
         <td><%= venue.city %></td>
         <td><%= venue.latitude %> - <%= venue.longitude %></td>
         <td><%= venue.time_zone %></td>

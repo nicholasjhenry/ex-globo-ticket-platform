@@ -17,9 +17,9 @@
       <th></th>
     </tr>
   </thead>
-  <tbody id="venues">
+  <tbody data-venues>
     <%= for venue <- @venues do %>
-      <tr id={"venue-#{venue.id}"}>
+      <tr data-venue-id={venue.id}>
         <td data-venue-name><%= venue.name %></td>
         <td><%= venue.city %></td>
         <td><%= venue.latitude %> - <%= venue.longitude %></td>

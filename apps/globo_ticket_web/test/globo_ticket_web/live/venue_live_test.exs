@@ -90,6 +90,28 @@ defmodule GloboTicketWeb.VenueLiveTest do
       |> delete_venue(venue)
       |> refute_html("[data-venue-id=#{venue.id}] [data-venue-name]", venue.name)
     end
+
+    defp list_venues(conn, params \\ %{}) do
+      live(conn, Routes.venue_index_path(conn, :index, params))
+    end
+
+    defp new_venue(live) do
+      live
+      |> element("[data-action=venue-new]")
+      |> render_click()
+    end
+
+    defp edit_venue(live, venue) do
+      live
+      |> element("[data-venue-id=#{venue.id}] [data-action=venue-edit]")
+      |> render_click()
+    end
+
+    defp delete_venue(live, venue) do
+      live
+      |> element("[data-venue-id=#{venue.id}] [data-action=venue-delete]")
+      |> render_click()
+    end
   end
 
   describe "Show" do
@@ -106,12 +128,10 @@ defmodule GloboTicketWeb.VenueLiveTest do
     test "updates venue within modal", %{conn: conn, venue: venue} do
       {:ok, show_live, _html} = show_venue(conn, venue)
 
-      html =
-        show_live
-        |> element("[data-action=venue-edit]")
-        |> render_click()
+      show_live
+      |> edit_venue()
+      |> assert_html("h2", "Edit Venue")
 
-      assert_html(html, "h2", "Edit Venue")
       assert_patch(show_live, Routes.venue_show_path(conn, :edit, venue))
 
       html =
@@ -122,42 +142,28 @@ defmodule GloboTicketWeb.VenueLiveTest do
       assert_html(html, "[data-venue-name] [data-error]", html_escape("can't be blank"))
 
       update_attrs = Venues.Controls.Venue.Attrs.valid(name: "Changed Name")
-
-      {:ok, _, html} =
-        show_live
-        |> form(@form_identifier, venue: update_attrs)
-        |> render_submit()
-        |> follow_redirect(conn, Routes.venue_show_path(conn, :show, venue))
+      {:ok, _, html} = update_venue(conn, show_live, venue, update_attrs)
 
       html
       |> assert_html("[data-flash-info]", "Venue updated successfully")
       |> assert_html("[data-venue-name]", update_attrs.name)
     end
-  end
 
-  defp list_venues(conn, params \\ %{}) do
-    live(conn, Routes.venue_index_path(conn, :index, params))
-  end
+    defp edit_venue(live) do
+      live
+      |> element("[data-action=venue-edit]")
+      |> render_click()
+    end
 
-  defp show_venue(conn, venue) do
-    live(conn, Routes.venue_show_path(conn, :show, venue))
-  end
+    defp show_venue(conn, venue) do
+      live(conn, Routes.venue_show_path(conn, :show, venue))
+    end
 
-  defp new_venue(live) do
-    live
-    |> element("[data-action=venue-new]")
-    |> render_click()
-  end
-
-  defp edit_venue(live, venue) do
-    live
-    |> element("[data-venue-id=#{venue.id}] [data-action=venue-edit]")
-    |> render_click()
-  end
-
-  defp delete_venue(live, venue) do
-    live
-    |> element("[data-venue-id=#{venue.id}] [data-action=venue-delete]")
-    |> render_click()
+    defp update_venue(conn, live, venue, attrs) do
+      live
+      |> form(@form_identifier, venue: attrs)
+      |> render_submit()
+      |> follow_redirect(conn, Routes.venue_show_path(conn, :show, venue))
+    end
   end
 end

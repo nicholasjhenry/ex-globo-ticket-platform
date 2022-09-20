@@ -2,6 +2,7 @@ defmodule GloboTicketWeb.VenueLiveTest do
   use GloboTicketWeb.ConnCase
 
   import Phoenix.LiveViewTest
+  import AssertData
 
   alias GloboTicket.Promotions.Venues
 
@@ -21,7 +22,7 @@ defmodule GloboTicketWeb.VenueLiveTest do
 
       html
       |> assert_html("h1", "Listing Venues")
-      |> assert_html("[data-venue-id=#{venue.id}] [data-venue-name]", venue.name)
+      |> assert_data(:venue, :name, venue)
     end
 
     test "saves new venue", %{conn: conn} do
@@ -34,12 +35,10 @@ defmodule GloboTicketWeb.VenueLiveTest do
 
       assert_patch(index_live, Routes.venue_index_path(conn, :new, venue_id))
 
-      html =
-        index_live
-        |> form(@form_identifier, venue: Venues.Controls.Venue.Attrs.invalid())
-        |> render_change()
-
-      assert_html(html, "[data-venue-name] [data-error]", html_escape("can't be blank"))
+      index_live
+      |> form(@form_identifier, venue: Venues.Controls.Venue.Attrs.invalid())
+      |> render_change()
+      |> assert_form_error(@form_identifier, :venue, :name, "can't be blank")
 
       create_attrs = Venues.Controls.Venue.Attrs.valid()
 
@@ -50,8 +49,8 @@ defmodule GloboTicketWeb.VenueLiveTest do
         |> follow_redirect(conn, Routes.venue_index_path(conn, :index))
 
       html
-      |> assert_html("[data-flash-info]", "Venue created successfully")
-      |> assert_html("[data-venue-id=#{venue_id}] [data-venue-name]", create_attrs.name)
+      |> assert_flash(:info, "Venue created successfully")
+      |> assert_data(:venue, :name, venue_id, create_attrs.name)
     end
 
     test "updates venue in listing", %{conn: conn, venue: venue} do
@@ -63,12 +62,10 @@ defmodule GloboTicketWeb.VenueLiveTest do
 
       assert_patch(index_live, Routes.venue_index_path(conn, :edit, venue))
 
-      html =
-        index_live
-        |> form(@form_identifier, venue: Venues.Controls.Venue.Attrs.invalid())
-        |> render_change()
-
-      assert_html(html, "[data-venue-name] [data-error]", html_escape("can't be blank"))
+      index_live
+      |> form(@form_identifier, venue: Venues.Controls.Venue.Attrs.invalid())
+      |> render_change()
+      |> assert_form_error(@form_identifier, :venue, :name, "can't be blank")
 
       update_attrs = Venues.Controls.Venue.Attrs.valid(name: "Changed Name")
 
@@ -79,8 +76,8 @@ defmodule GloboTicketWeb.VenueLiveTest do
         |> follow_redirect(conn, Routes.venue_index_path(conn, :index))
 
       html
-      |> assert_html("[data-flash-info]", "Venue updated successfully")
-      |> assert_html("[data-venue-name]", update_attrs.name)
+      |> assert_flash(:info, "Venue updated successfully")
+      |> assert_data(:venue, :name, venue.id, update_attrs.name)
     end
 
     test "deletes venue in listing", %{conn: conn, venue: venue} do
@@ -88,7 +85,7 @@ defmodule GloboTicketWeb.VenueLiveTest do
 
       index_live
       |> delete_venue(venue)
-      |> refute_html("[data-venue-id=#{venue.id}] [data-venue-name]", venue.name)
+      |> refute_data(:venue, venue)
     end
 
     defp list_venues(conn, params \\ %{}) do
@@ -122,7 +119,7 @@ defmodule GloboTicketWeb.VenueLiveTest do
 
       html
       |> assert_html("h1", "Show Venue")
-      |> assert_html("[data-venue-name]", venue.name)
+      |> assert_data(:venue, :name, venue)
     end
 
     test "updates venue within modal", %{conn: conn, venue: venue} do
@@ -134,19 +131,17 @@ defmodule GloboTicketWeb.VenueLiveTest do
 
       assert_patch(show_live, Routes.venue_show_path(conn, :edit, venue))
 
-      html =
-        show_live
-        |> form(@form_identifier, venue: Venues.Controls.Venue.Attrs.invalid())
-        |> render_change()
-
-      assert_html(html, "[data-venue-name] [data-error]", html_escape("can't be blank"))
+      show_live
+      |> form(@form_identifier, venue: Venues.Controls.Venue.Attrs.invalid())
+      |> render_change()
+      |> assert_form_error(@form_identifier, :venue, :name, "can't be blank")
 
       update_attrs = Venues.Controls.Venue.Attrs.valid(name: "Changed Name")
       {:ok, _, html} = update_venue(conn, show_live, venue, update_attrs)
 
       html
-      |> assert_html("[data-flash-info]", "Venue updated successfully")
-      |> assert_html("[data-venue-name]", update_attrs.name)
+      |> assert_flash(:info, "Venue updated successfully")
+      |> assert_data(:venue, :name, venue.id, "Changed Name")
     end
 
     defp edit_venue(live) do

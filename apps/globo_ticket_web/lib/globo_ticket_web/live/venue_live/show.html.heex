@@ -1,3 +1,5 @@
+
+<div data-venue-id={@venue.id}>
 <h1>Show Venue</h1>
 
 <%= if @live_action in [:edit] do %>
@@ -23,3 +25,4 @@
 </span>
 |
 <span><%= live_redirect("Back", to: Routes.venue_index_path(@socket, :index)) %></span>
+</div>

@@ -3,10 +3,10 @@
 
   <.form let={f} for={@changeset} id="venue-form" as="venue" phx-target={@myself} phx-change="validate" phx-submit="save">
     <.input type="text" f={f} field={:name} />
-    <.input type="text" f={f}  field={:city} />
+    <.input type="text" f={f} field={:city} />
     <.input type="number" f={f} field={:latitude} />
     <.input type="number" f={f} field={:longitude} />
-    <.input type="text" f={f}  field={:time_zone} />
+    <.input type="text" f={f} field={:time_zone} />
 
     <.submit_button label="Save" phx_disable_with="Saving..." />
   </.form>

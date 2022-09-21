@@ -38,6 +38,7 @@ defmodule GloboTicketWeb do
   def live_component do
     quote do
       use Phoenix.LiveComponent
+      import GloboTicketWeb.FormComponent
 
       unquote(view_helpers())
     end

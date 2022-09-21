@@ -17,14 +17,6 @@ defmodule GloboTicket.Promotions.Venues.Records.Venue do
     timestamps()
   end
 
-  @doc false
-  def changeset(venue, attrs) do
-    venue
-    |> cast(attrs, [:uuid])
-    |> validate_required([:uuid])
-    |> unique_constraint(:uuid)
-  end
-
   def to_entity(nil), do: nil
 
   def to_entity(record) do

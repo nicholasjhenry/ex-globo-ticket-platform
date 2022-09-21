@@ -11,13 +11,6 @@ defmodule GloboTicket.Promotions.Venues.Records.VenueLocation do
     timestamps(updated_at: false)
   end
 
-  @doc false
-  def changeset(venue_location, attrs) do
-    venue_location
-    |> cast(attrs, [:lat, :long])
-    |> validate_required([:lat, :long])
-  end
-
   def equal?(nil, _next_snapshot) do
     false
   end

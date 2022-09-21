@@ -11,13 +11,6 @@ defmodule GloboTicket.Promotions.Venues.Records.VenueDescription do
     timestamps(updated_at: false)
   end
 
-  @doc false
-  def changeset(venue_description, attrs) do
-    venue_description
-    |> cast(attrs, [:name, :city])
-    |> validate_required([:name, :city])
-  end
-
   def equal?(nil, _next_snapshot) do
     false
   end

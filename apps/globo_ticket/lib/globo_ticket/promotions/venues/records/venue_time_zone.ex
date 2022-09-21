@@ -2,20 +2,12 @@ defmodule GloboTicket.Promotions.Venues.Records.VenueTimeZone do
   @moduledoc false
 
   use GloboTicket.Record
-  import Ecto.Changeset
 
   schema "promotion_venue_time_zones" do
     field :time_zone, :string
     field :venue_id, :id
 
     timestamps(updated_at: false)
-  end
-
-  @doc false
-  def changeset(venue_time_zone, attrs) do
-    venue_time_zone
-    |> cast(attrs, [:time_zone])
-    |> validate_required([:time_zone])
   end
 
   def equal?(nil, _next_snapshot) do

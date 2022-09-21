@@ -1,7 +1,7 @@
 defmodule GloboTicket.Promotions.Venues.Venue do
   @moduledoc false
 
-  use GloboTicket.Record
+  use GloboTicket.Entity
 
   embedded_schema do
     field :name, :string

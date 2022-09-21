@@ -1,7 +1,5 @@
 defmodule GloboTicket.Promotions.Venues.Handlers.Commands do
-  @moduledoc """
-  Handles commands for venues.
-  """
+  @moduledoc false
 
   use GloboTicket.CommandHandler
 

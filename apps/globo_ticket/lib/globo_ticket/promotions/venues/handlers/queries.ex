@@ -1,7 +1,5 @@
 defmodule GloboTicket.Promotions.Venues.Handlers.Queries do
-  @moduledoc """
-  Handles queries for venues.
-  """
+  @moduledoc false
 
   use GloboTicket.QueryHandler
 

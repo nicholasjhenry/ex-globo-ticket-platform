@@ -1,7 +1,7 @@
 defmodule GloboTicket.Promotions.Venues.Records.VenueLocation do
   @moduledoc false
 
-  use GloboTicket.Schema
+  use GloboTicket.Record
 
   schema "promotion_venue_locations" do
     field :latitude, :float

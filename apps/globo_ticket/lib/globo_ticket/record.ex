@@ -1,4 +1,4 @@
-defmodule GloboTicket.Schema do
+defmodule GloboTicket.Record do
   @moduledoc false
 
   defmacro __using__(_opts) do
@@ -7,7 +7,7 @@ defmodule GloboTicket.Schema do
 
       import Ecto.Changeset
       import Ecto.Query
-      import GloboTicket.Schema
+      import GloboTicket.Record
 
       alias Ecto.Changeset
       alias Ecto.Query

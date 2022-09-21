@@ -1,7 +1,7 @@
 defmodule GloboTicket.Promotions.Venues.Records.VenueDescription do
   @moduledoc false
 
-  use GloboTicket.Schema
+  use GloboTicket.Record
 
   schema "promotion_venue_descriptions" do
     field :city, :string

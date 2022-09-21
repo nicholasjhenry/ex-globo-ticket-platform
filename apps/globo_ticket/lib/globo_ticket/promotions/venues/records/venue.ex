@@ -1,7 +1,7 @@
 defmodule GloboTicket.Promotions.Venues.Records.Venue do
   @moduledoc false
 
-  use GloboTicket.Schema
+  use GloboTicket.Record
 
   alias Emu.Ticks
   alias GloboTicket.Promotions.Venues

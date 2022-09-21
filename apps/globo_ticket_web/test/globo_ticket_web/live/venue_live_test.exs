@@ -2,11 +2,11 @@ defmodule GloboTicketWeb.VenueLiveTest do
   use GloboTicketWeb.ConnCase
 
   import Phoenix.LiveViewTest
-  import AssertData
+  import AssertResource
 
   alias GloboTicket.Promotions.Venues
 
-  @form_identifier "[data-venue-form]"
+  @form_identifier "[data-resource-form=venue]"
 
   defp create_venue(_context) do
     venue_info = Venues.Controls.Venue.example()
@@ -22,7 +22,7 @@ defmodule GloboTicketWeb.VenueLiveTest do
 
       html
       |> assert_html("h1", "Listing Venues")
-      |> assert_data(:venue, :name, venue)
+      |> assert_resource(:venue, :name, venue)
     end
 
     test "saves new venue", %{conn: conn} do
@@ -38,7 +38,7 @@ defmodule GloboTicketWeb.VenueLiveTest do
       index_live
       |> form(@form_identifier, venue: Venues.Controls.Venue.Attrs.invalid())
       |> render_change()
-      |> assert_form_error(@form_identifier, :venue, :name, "can't be blank")
+      |> assert_form_error(:venue, :name, "can't be blank")
 
       create_attrs = Venues.Controls.Venue.Attrs.valid()
 
@@ -50,7 +50,7 @@ defmodule GloboTicketWeb.VenueLiveTest do
 
       html
       |> assert_flash(:info, "Venue created successfully")
-      |> assert_data(:venue, :name, venue_id, create_attrs.name)
+      |> assert_resource(:venue, :name, venue_id, create_attrs.name)
     end
 
     test "updates venue in listing", %{conn: conn, venue: venue} do
@@ -65,7 +65,7 @@ defmodule GloboTicketWeb.VenueLiveTest do
       index_live
       |> form(@form_identifier, venue: Venues.Controls.Venue.Attrs.invalid())
       |> render_change()
-      |> assert_form_error(@form_identifier, :venue, :name, "can't be blank")
+      |> assert_form_error(:venue, :name, "can't be blank")
 
       update_attrs = Venues.Controls.Venue.Attrs.valid(name: "Changed Name")
 
@@ -77,7 +77,7 @@ defmodule GloboTicketWeb.VenueLiveTest do
 
       html
       |> assert_flash(:info, "Venue updated successfully")
-      |> assert_data(:venue, :name, venue.id, update_attrs.name)
+      |> assert_resource(:venue, :name, venue.id, update_attrs.name)
     end
 
     test "deletes venue in listing", %{conn: conn, venue: venue} do
@@ -85,7 +85,7 @@ defmodule GloboTicketWeb.VenueLiveTest do
 
       index_live
       |> delete_venue(venue)
-      |> refute_data(:venue, venue)
+      |> refute_resource(:venue, venue)
     end
 
     defp list_venues(conn, params \\ %{}) do
@@ -94,19 +94,19 @@ defmodule GloboTicketWeb.VenueLiveTest do
 
     defp new_venue(live) do
       live
-      |> element("[data-action=venue-new]")
+      |> element("[data-resource-type=venue] [data-action=new]")
       |> render_click()
     end
 
     defp edit_venue(live, venue) do
       live
-      |> element("[data-venue-id=#{venue.id}] [data-action=venue-edit]")
+      |> element("[data-resource-id=#{venue.id}] [data-action=edit]")
       |> render_click()
     end
 
     defp delete_venue(live, venue) do
       live
-      |> element("[data-venue-id=#{venue.id}] [data-action=venue-delete]")
+      |> element("[data-resource-id=#{venue.id}] [data-action=delete]")
       |> render_click()
     end
   end
@@ -119,7 +119,7 @@ defmodule GloboTicketWeb.VenueLiveTest do
 
       html
       |> assert_html("h1", "Show Venue")
-      |> assert_data(:venue, :name, venue)
+      |> assert_resource(:venue, :name, venue)
     end
 
     test "updates venue within modal", %{conn: conn, venue: venue} do
@@ -134,19 +134,19 @@ defmodule GloboTicketWeb.VenueLiveTest do
       show_live
       |> form(@form_identifier, venue: Venues.Controls.Venue.Attrs.invalid())
       |> render_change()
-      |> assert_form_error(@form_identifier, :venue, :name, "can't be blank")
+      |> assert_form_error(:venue, :name, "can't be blank")
 
       update_attrs = Venues.Controls.Venue.Attrs.valid(name: "Changed Name")
       {:ok, _, html} = update_venue(conn, show_live, venue, update_attrs)
 
       html
       |> assert_flash(:info, "Venue updated successfully")
-      |> assert_data(:venue, :name, venue.id, "Changed Name")
+      |> assert_resource(:venue, :name, venue.id, "Changed Name")
     end
 
     defp edit_venue(live) do
       live
-      |> element("[data-action=venue-edit]")
+      |> element("[data-resource-type=venue] [data-action=edit]")
       |> render_click()
     end
 

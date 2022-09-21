@@ -1,49 +1,51 @@
-<h1>Listing Venues</h1>
+<div data-resource-type="venue">
+  <h1>Listing Venues</h1>
 
-<%= if @live_action in [:new, :edit] do %>
-  <.modal return_to={Routes.venue_index_path(@socket, :index)}>
-    <.live_component module={GloboTicketWeb.VenueLive.FormComponent} id={@venue.id || :new} title={@page_title} action={@live_action} venue={@venue} return_to={Routes.venue_index_path(@socket, :index)} />
-  </.modal>
-<% end %>
+  <%= if @live_action in [:new, :edit] do %>
+    <.modal return_to={Routes.venue_index_path(@socket, :index)}>
+      <.live_component module={GloboTicketWeb.VenueLive.FormComponent} id={@venue.id || :new} title={@page_title} action={@live_action} venue={@venue} return_to={Routes.venue_index_path(@socket, :index)} />
+    </.modal>
+  <% end %>
 
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>City</th>
-      <th>Location</th>
-      <th>Time Zone</th>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>City</th>
+        <th>Location</th>
+        <th>Time Zone</th>
 
-      <th></th>
-    </tr>
-  </thead>
-  <tbody data-venues>
-    <%= for venue <- @venues do %>
-      <tr data-venue-id={venue.id}>
-        <td data-venue-name><%= venue.name %></td>
-        <td><%= venue.city %></td>
-        <td><%= venue.latitude %> - <%= venue.longitude %></td>
-        <td><%= venue.time_zone %></td>
-
-        <td>
-          <span>
-            <%= live_redirect("Show", to: Routes.venue_show_path(@socket, :show, venue), data: [action: "venue-show"]) %>
-          </span>
-          <span>
-            <%= live_patch("Edit", to: Routes.venue_index_path(@socket, :edit, venue), data: [action: "venue-edit"]) %>
-          </span>
-          <span>
-            <%= link("Delete",
-              to: "#",
-              phx_click: "delete",
-              phx_value_id: venue.id,
-              data: [confirm: "Are you sure?", action: "venue-delete"]
-            ) %>
-          </span>
-        </td>
+        <th></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <%= for venue <- @venues do %>
+        <tr data-resource-id={venue.id}>
+          <td data-resource-attr="name"><%= venue.name %></td>
+          <td><%= venue.city %></td>
+          <td><%= venue.latitude %> - <%= venue.longitude %></td>
+          <td><%= venue.time_zone %></td>
 
-<span><%= live_patch("New Venue", to: Routes.venue_index_path(@socket, :new, @id), data: [action: "venue-new"]) %></span>
+          <td>
+            <span>
+              <%= live_redirect("Show", to: Routes.venue_show_path(@socket, :show, venue), data: [action: "show"]) %>
+            </span>
+            <span>
+              <%= live_patch("Edit", to: Routes.venue_index_path(@socket, :edit, venue), data: [action: "edit"]) %>
+            </span>
+            <span>
+              <%= link("Delete",
+                to: "#",
+                phx_click: "delete",
+                phx_value_id: venue.id,
+                data: [confirm: "Are you sure?", action: "delete"]
+              ) %>
+            </span>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <span><%= live_patch("New Venue", to: Routes.venue_index_path(@socket, :new, @id), data: [action: "new"]) %></span>
+</div>

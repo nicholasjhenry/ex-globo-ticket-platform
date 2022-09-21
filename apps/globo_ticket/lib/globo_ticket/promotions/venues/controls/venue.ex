@@ -1,9 +1,10 @@
 defmodule GloboTicket.Promotions.Venues.Controls.Venue do
   @moduledoc false
 
+  use GloboTicket.Control
+
   alias Emu.Ticks
   alias GloboTicket.Promotions.Venues
-  alias Verity.Identifier
 
   def example(attrs \\ %{}) do
     defaults = %{

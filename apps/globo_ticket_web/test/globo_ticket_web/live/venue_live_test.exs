@@ -36,16 +36,14 @@ defmodule GloboTicketWeb.VenueLiveTest do
       assert_patch(index_live, Routes.venue_index_path(conn, :new, venue_id))
 
       index_live
-      |> form(@form_identifier, venue: Venues.Controls.Venue.Attrs.invalid())
-      |> render_change()
+      |> change_form(venue: Venues.Controls.Venue.Attrs.invalid())
       |> assert_form_error(:venue, :name, "can't be blank")
 
       create_attrs = Venues.Controls.Venue.Attrs.valid()
 
       {:ok, _, html} =
         index_live
-        |> form(@form_identifier, venue: create_attrs)
-        |> render_submit()
+        |> submit_form(venue: create_attrs)
         |> follow_redirect(conn, Routes.venue_index_path(conn, :index))
 
       html
@@ -160,5 +158,17 @@ defmodule GloboTicketWeb.VenueLiveTest do
       |> render_submit()
       |> follow_redirect(conn, Routes.venue_show_path(conn, :show, venue))
     end
+  end
+
+  defp change_form(live, attrs) do
+    live
+    |> form(@form_identifier, attrs)
+    |> render_change()
+  end
+
+  defp submit_form(live, attrs) do
+    live
+    |> form(@form_identifier, attrs)
+    |> render_submit()
   end
 end

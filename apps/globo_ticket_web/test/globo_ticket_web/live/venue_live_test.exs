@@ -6,7 +6,7 @@ defmodule GloboTicketWeb.VenueLiveTest do
 
   alias GloboTicket.Promotions.Venues
 
-  @form_identifier "[data-resource-form=venue]"
+  @form_identifier "#venue-form"
 
   defp create_venue(_context) do
     venue_info = Venues.Controls.Venue.example()

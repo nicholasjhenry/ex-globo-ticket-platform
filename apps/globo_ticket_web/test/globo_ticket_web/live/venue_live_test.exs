@@ -5,6 +5,7 @@ defmodule GloboTicketWeb.VenueLiveTest do
   import AssertResource
 
   alias GloboTicket.Promotions.Venues
+  alias Verity.Identifier
 
   @form_identifier "#venue-form"
 
@@ -26,7 +27,7 @@ defmodule GloboTicketWeb.VenueLiveTest do
     end
 
     test "saves new venue", %{conn: conn} do
-      venue_id = Verity.Identifier.Uuid.Controls.Random.example()
+      venue_id = Identifier.Uuid.Controls.Random.example()
       {:ok, index_live, _html} = list_venues(conn, id: venue_id)
 
       index_live

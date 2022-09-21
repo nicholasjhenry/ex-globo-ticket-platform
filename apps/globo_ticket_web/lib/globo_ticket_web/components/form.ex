@@ -1,4 +1,5 @@
 defmodule GloboTicketWeb.FormComponent do
+  @moduledoc false
   use GloboTicketWeb, :component
 
   def input(%{type: "text"} = assigns) do

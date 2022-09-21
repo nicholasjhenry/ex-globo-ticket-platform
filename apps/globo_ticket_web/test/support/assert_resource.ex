@@ -29,7 +29,7 @@ defmodule AssertResource do
 
   defmacro assert_flash(html, type, msg) do
     quote do
-      selector = "[data-flash-#{unquote(type)}]"
+      selector = "[data-flash=#{unquote(type)}]"
       AssertHTML.assert_html(unquote(html), selector, unquote(msg))
     end
   end

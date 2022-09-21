@@ -1,4 +1,4 @@
-defmodule AssertResource do
+defmodule Phoenix.Resource.Assertions do
   @moduledoc false
 
   defmacro assert_resource(html, resource_type, attr, resource) do

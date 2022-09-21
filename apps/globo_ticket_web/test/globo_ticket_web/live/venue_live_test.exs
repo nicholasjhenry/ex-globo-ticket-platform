@@ -2,7 +2,7 @@ defmodule GloboTicketWeb.VenueLiveTest do
   use GloboTicketWeb.ConnCase
 
   import Phoenix.LiveViewTest
-  import AssertResource
+  import Phoenix.Resource.Assertions
 
   alias GloboTicket.Promotions.Venues
   alias Verity.Identifier

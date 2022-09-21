@@ -1,4 +1,4 @@
-defmodule Identifier.Uuid do
+defmodule Verity.Identifier.Uuid do
   @moduledoc """
   A UUID-based identifier.
   """
@@ -7,6 +7,6 @@ defmodule Identifier.Uuid do
 
   @spec generate() :: t
   def generate do
-    Ecto.UUID.generate()
+    UUID.uuid4()
   end
 end

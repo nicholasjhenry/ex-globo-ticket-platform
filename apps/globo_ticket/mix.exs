@@ -45,7 +45,8 @@ defmodule GloboTicket.MixProject do
     [
       {:faker, "~> 0.17"},
       {:typed_struct, "~> 0.3.0"},
-      {:utils, in_umbrella: true, only: :dev}
+      {:utils, in_umbrella: true, only: :dev},
+      {:vrt_identifier, in_umbrella: true}
     ]
   end
 

@@ -6,7 +6,7 @@ defmodule GloboTicket.Promotions.Venues.Controls.Venue do
 
   def example(attrs \\ %{}) do
     defaults = %{
-      id: Identifier.Uuid.Controls.Static.example(),
+      id: Verity.Identifier.Uuid.Controls.Static.example(),
       name: "American Airlines Center",
       city: "Montreal",
       last_updated_ticks: Ticks.zero(),
@@ -23,7 +23,7 @@ defmodule GloboTicket.Promotions.Venues.Controls.Venue do
 
   def generate(attrs \\ %{}) do
     defaults = %{
-      id: Identifier.Uuid.Controls.Random.example(),
+      id: Verity.Identifier.Uuid.Controls.Random.example(),
       name: Faker.Company.name() <> " Center",
       city: Faker.Address.city(),
       last_updated_ticks: Ticks.zero(),

@@ -17,7 +17,7 @@ defmodule GloboTicketWeb.VenueLive.Index do
   end
 
   defp apply_action(socket, :index, params) do
-    id = params["id"] || Identifier.Uuid.generate()
+    id = params["id"] || Verity.Identifier.Uuid.generate()
 
     socket
     |> assign(:page_title, "Listing Venues")

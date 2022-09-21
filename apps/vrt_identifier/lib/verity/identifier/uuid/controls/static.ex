@@ -1,4 +1,4 @@
-defmodule Identifier.Uuid.Controls.Static do
+defmodule Verity.Identifier.Uuid.Controls.Static do
   @moduledoc false
 
   def example do

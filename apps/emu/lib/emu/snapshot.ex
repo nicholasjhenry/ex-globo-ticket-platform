@@ -12,12 +12,14 @@ defmodule Emu.Snapshot do
     # -- https://hexdocs.pm/ecto/3.8.4/Ecto.Query.html#preload/3-preload-queries
 
     ranking_query =
-      from r in struct,
+      from(r in struct,
         select: %{id: r.id, row_number: over(row_number(), :partition)},
         windows: [partition: [partition_by: ^foreign_key, order_by: ^order_by]]
+      )
 
-    from r in struct,
+    from(r in struct,
       join: s in subquery(ranking_query),
       on: r.id == s.id and s.row_number <= 1
+    )
   end
 end

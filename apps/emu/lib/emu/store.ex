@@ -4,23 +4,26 @@ defmodule Emu.Store do
   """
 
   alias Emu.Ticks
-  alias GloboTicket.Repo
 
-  def soft_delete(struct) do
+  def get_record!(query, repo, uuid) do
+    repo.get_by!(query, uuid: uuid)
+  end
+
+  def soft_delete(struct, repo) do
     struct
     |> Ecto.build_assoc(:removed, removed_at: DateTime.utc_now())
-    |> Repo.insert()
+    |> repo.insert()
   end
 
-  def save_entity_record(record) do
-    Repo.insert(record, on_conflict: {:replace, [:uuid]}, conflict_target: [:uuid])
+  def save_entity_record(repo, record) do
+    repo.insert(record, on_conflict: {:replace, [:uuid]}, conflict_target: [:uuid])
   end
 
-  def save_snapshot(_entity, nil, next_snapshot) do
-    Repo.insert(next_snapshot)
+  def save_snapshot(repo, _entity, nil, next_snapshot) do
+    repo.insert(next_snapshot)
   end
 
-  def save_snapshot(entity, record, assoc, field \\ :last_updated_ticks) do
+  def save_snapshot(repo, entity, record, assoc, field \\ :last_updated_ticks) do
     assoc_schema = record.__struct__.__schema__(:association, assoc).related
 
     last_snapshot = Map.fetch!(record, assoc) || struct(assoc_schema)
@@ -34,7 +37,7 @@ defmodule Emu.Store do
       |> Map.fetch!(field)
       |> concurrency_check!(last_snapshot)
 
-      Repo.insert(next_snapshot)
+      repo.insert(next_snapshot)
     end
   end
 

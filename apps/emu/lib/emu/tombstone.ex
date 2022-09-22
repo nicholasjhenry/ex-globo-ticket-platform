@@ -5,6 +5,6 @@ defmodule Emu.Tombstone do
   import Ecto.Query
 
   def present(query) do
-    from record in query, left_join: removed in assoc(record, :removed), where: is_nil(removed.id)
+    from(record in query, left_join: removed in assoc(record, :removed), where: is_nil(removed.id))
   end
 end

@@ -43,6 +43,7 @@ defmodule GloboTicket.MixProject do
 
   defp project_deps do
     [
+      {:emu, in_umbrella: true},
       {:faker, "~> 0.17"},
       {:typed_struct, "~> 0.3.0"},
       {:utils, in_umbrella: true, only: :dev},

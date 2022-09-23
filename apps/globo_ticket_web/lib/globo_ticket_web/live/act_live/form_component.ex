@@ -3,6 +3,8 @@ defmodule GloboTicketWeb.ActLive.FormComponent do
 
   alias GloboTicket.Promotions.Acts
 
+  import Phoenix.Component
+
   @impl true
   def update(%{act: act} = assigns, socket) do
     changeset = Acts.Act.changeset(act, %{})
@@ -11,6 +13,8 @@ defmodule GloboTicketWeb.ActLive.FormComponent do
       socket
       |> assign(assigns)
       |> assign(:changeset, changeset)
+      |> assign(:uploaded_files, [])
+      |> allow_upload(:image, accept: ~w(.jpg .jpeg .png), max_entries: 1)
 
     {:ok, socket}
   end
@@ -30,11 +34,15 @@ defmodule GloboTicketWeb.ActLive.FormComponent do
   end
 
   defp save_act(socket, :new, act_params) do
+    uploaded_files = handle_upload(socket)
+    act_params = Map.put(act_params, "image", List.first(uploaded_files))
+
     with {:ok, act} <-
            Acts.Act.from_params(socket.assigns.act, act_params),
          {:ok, _act} <- Acts.Handlers.Commands.save_act(act) do
       {:noreply,
        socket
+       |> update(:uploaded_files, &(&1 ++ uploaded_files))
        |> put_flash(:info, "Act created successfully")
        |> push_redirect(to: socket.assigns.return_to)}
     else
@@ -55,5 +63,15 @@ defmodule GloboTicketWeb.ActLive.FormComponent do
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
     end
+  end
+
+  defp handle_upload(socket) do
+    consume_uploaded_entries(socket, :image, fn %{path: path}, _entry ->
+      dest =
+        Path.join([:code.priv_dir(:globo_ticket_web), "static", "uploads", Path.basename(path)])
+
+      File.cp!(path, dest)
+      {:ok, Routes.static_path(socket, "/uploads/#{Path.basename(dest)}")}
+    end)
   end
 end

@@ -5,6 +5,7 @@ defmodule GloboTicket.Promotions.Acts.Records.ActDescription do
 
   schema "promotion_act_descriptions" do
     field :title, :string
+    field :image, :string
     field :act_id, :id
 
     timestamps(updated_at: false)
@@ -21,7 +22,8 @@ defmodule GloboTicket.Promotions.Acts.Records.ActDescription do
   def from_entity(entity, record) do
     %__MODULE__{
       act_id: record.id,
-      title: entity.title
+      title: entity.title,
+      image: entity.image
     }
   end
 end

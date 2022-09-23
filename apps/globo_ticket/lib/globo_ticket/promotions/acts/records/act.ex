@@ -21,6 +21,7 @@ defmodule GloboTicket.Promotions.Acts.Records.Act do
     %Acts.Act{
       id: record.uuid,
       title: record.description.title,
+      image: record.description.image,
       last_updated_ticks: Ticks.from_date_time(record.description.inserted_at)
     }
   end

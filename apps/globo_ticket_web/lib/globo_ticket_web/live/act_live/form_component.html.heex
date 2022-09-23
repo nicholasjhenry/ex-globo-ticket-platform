@@ -4,6 +4,20 @@
   <.form let={f} for={@changeset} id="act-form" as="act" phx-target={@myself} phx-change="validate" phx-submit="save">
     <.input type="text" f={f} field={:title} />
 
+    <%= label(f, :image) %>
+
+    <%= for entry <- @uploads.image.entries do %>
+      <%= live_img_preview(entry) %>
+    <% end %>
+
+    <%= live_file_input(@uploads.image) %>
+
+    <%= for entry <- @uploads.image.entries do %>
+      <article class="upload-entry">
+        <progress value={entry.progress} max="100"><%= entry.progress %>%</progress>
+      </article>
+    <% end %>
+
     <.submit_button label="Save" phx_disable_with="Saving..." />
   </.form>
 </div>

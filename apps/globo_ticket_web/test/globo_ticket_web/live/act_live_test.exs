@@ -42,6 +42,13 @@ defmodule GloboTicketWeb.ActLiveTest do
 
       create_attrs = Acts.Controls.Act.Attrs.valid()
 
+      image =
+        file_input(index_live, "#act-form", :image, [
+          Acts.Controls.Image.example()
+        ])
+
+      assert render_upload(image, "image.png") =~ "100%"
+
       {:ok, _, html} =
         index_live
         |> submit_form(act: create_attrs)

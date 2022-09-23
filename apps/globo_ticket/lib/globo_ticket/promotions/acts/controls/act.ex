@@ -10,6 +10,7 @@ defmodule GloboTicket.Promotions.Acts.Controls.Act do
     defaults = %{
       id: Identifier.Uuid.Controls.Static.example(),
       title: "Gabriel Iglesias",
+      image: "/image.png",
       last_updated_ticks: Ticks.zero()
     }
 

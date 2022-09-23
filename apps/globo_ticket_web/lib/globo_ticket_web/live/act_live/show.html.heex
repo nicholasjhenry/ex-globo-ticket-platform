@@ -12,6 +12,15 @@
       <strong>Title:</strong>
       <%= @act.title %>
     </li>
+
+    <li data-resource-attr="image">
+      <strong>Image:</strong>
+      <%= if @act.image do %>
+        <img src={Routes.static_path(@socket, @act.image)} />
+      <% else %>
+        <img src="https://via.placeholder.com/150" />
+      <% end %>
+    </li>
   </ul>
 
   <span>

@@ -11,20 +11,20 @@ defmodule GloboTicket.Promotions.ActsTest do
   end
 
   test "when act added then a act is returned" do
-    act_info = Controls.Act.example()
+    act = Controls.Act.example()
 
-    result = Handlers.Commands.save_act(act_info)
+    result = Handlers.Commands.save_act(act)
 
     assert {:ok, _record} = result
     acts = Handlers.Queries.list_acts()
-    assert Enum.any?(acts, &(&1.id == act_info.id))
+    assert Enum.any?(acts, &(&1.id == act.id))
   end
 
   test "when act added twice then one act is added" do
-    act_info = Controls.Act.example()
-    _result = Handlers.Commands.save_act(act_info)
+    act = Controls.Act.example()
+    _result = Handlers.Commands.save_act(act)
 
-    result = Handlers.Commands.save_act(act_info)
+    result = Handlers.Commands.save_act(act)
 
     assert {:ok, _record} = result
     acts = Handlers.Queries.list_acts()
@@ -32,56 +32,56 @@ defmodule GloboTicket.Promotions.ActsTest do
   end
 
   test "when set act description then act description is returned" do
-    act_info = Controls.Act.example(title: "Gabriel Iglesias")
+    act = Controls.Act.example(title: "Gabriel Iglesias")
 
-    _result = Handlers.Commands.save_act(act_info)
+    _result = Handlers.Commands.save_act(act)
 
-    act = Store.get_act!(act_info.id)
+    act = Store.get_act!(act.id)
     assert act.title == "Gabriel Iglesias"
   end
 
   test "when set act description to the same description then nothing is saved" do
-    act_info = Controls.Act.example(title: "Gabriel Iglesias")
-    _result = Handlers.Commands.save_act(act_info)
-    first_snapshot = Store.get_act!(act_info.id)
+    act = Controls.Act.example(title: "Gabriel Iglesias")
+    _result = Handlers.Commands.save_act(act)
+    first_snapshot = Store.get_act!(act.id)
 
-    _result = Handlers.Commands.save_act(act_info)
+    _result = Handlers.Commands.save_act(act)
 
-    second_snapshot = Store.get_act!(act_info.id)
+    second_snapshot = Store.get_act!(act.id)
     assert second_snapshot.last_updated_ticks == first_snapshot.last_updated_ticks
   end
 
   test "when act is modified concurrently then exception is thrown" do
-    act_info = Controls.Act.example(title: "Gabriel Iglesias")
+    act = Controls.Act.example(title: "Gabriel Iglesias")
 
-    _result = Handlers.Commands.save_act(act_info)
-    act = Store.get_act!(act_info.id)
+    _result = Handlers.Commands.save_act(act)
+    act = Store.get_act!(act.id)
 
-    act_info =
+    act =
       Controls.Act.example(
         title: "Change 1",
         last_updated_ticks: act.last_updated_ticks
       )
 
-    _result = Handlers.Commands.save_act(act_info)
+    _result = Handlers.Commands.save_act(act)
 
     assert_raise Ecto.StaleEntryError, fn ->
-      act_info =
+      act =
         Controls.Act.example(
           title: "Change 2",
           last_updated_ticks: act.last_updated_ticks
         )
 
-      Handlers.Commands.save_act(act_info)
+      Handlers.Commands.save_act(act)
     end
   end
 
   test "when act deleted act is not returned" do
-    act_info = Controls.Act.example()
-    _result = Handlers.Commands.save_act(act_info)
+    act = Controls.Act.example()
+    _result = Handlers.Commands.save_act(act)
 
-    _result = Handlers.Commands.delete_act(act_info.id)
+    _result = Handlers.Commands.delete_act(act.id)
 
-    assert_raise Ecto.NoResultsError, fn -> Store.get_act!(act_info.id) end
+    assert_raise Ecto.NoResultsError, fn -> Store.get_act!(act.id) end
   end
 end

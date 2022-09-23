@@ -10,9 +10,9 @@ defmodule GloboTicketWeb.VenueLiveTest do
   @form_identifier "#venue-form"
 
   defp create_venue(_context) do
-    venue_info = Venues.Controls.Venue.example()
-    {:ok, _venue} = Venues.Handlers.Commands.save_venue(venue_info)
-    %{venue: venue_info}
+    venue = Venues.Controls.Venue.example()
+    {:ok, _venue} = Venues.Handlers.Commands.save_venue(venue)
+    %{venue: venue}
   end
 
   describe "Index" do

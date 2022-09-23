@@ -1,4 +1,4 @@
-defmodule GloboTicket.Promotions.Acts.Controls.Image do
+defmodule GloboTicket.Promotions.Contents.Controls.Image do
   @moduledoc false
 
   use GloboTicket.Control

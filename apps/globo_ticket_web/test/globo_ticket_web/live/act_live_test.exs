@@ -5,6 +5,7 @@ defmodule GloboTicketWeb.ActLiveTest do
   import Phoenix.Resource.Assertions
 
   alias GloboTicket.Promotions.Acts
+  alias GloboTicket.Promotions.Contents
   alias Verity.Identifier
 
   @form_identifier "#act-form"
@@ -44,7 +45,7 @@ defmodule GloboTicketWeb.ActLiveTest do
 
       image =
         file_input(index_live, "#act-form", :image, [
-          Acts.Controls.Image.example()
+          Contents.Controls.Image.example()
         ])
 
       assert render_upload(image, "image.png") =~ "100%"

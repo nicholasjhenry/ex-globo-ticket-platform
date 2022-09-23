@@ -38,6 +38,7 @@ defmodule GloboTicketWeb do
   def live_component do
     quote do
       use Phoenix.LiveComponent
+      import GloboTicketWeb.FormComponent
 
       unquote(view_helpers())
     end
@@ -75,6 +76,7 @@ defmodule GloboTicketWeb do
 
       # Import LiveView and .heex helpers (live_render, live_patch, <.form>, etc)
       import Phoenix.LiveView.Helpers
+      import GloboTicketWeb.LiveHelpers
 
       # Import basic rendering functionality (render, render_layout, etc)
       import Phoenix.View

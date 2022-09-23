@@ -20,8 +20,8 @@ defmodule GloboTicketDemo.Tasks.Setup do
 
   defp setup_demo do
     Logger.info("==> Inserting demo data...")
-    # Add demo data
-    :ok
+
+    _ = GloboTicketDemo.setup()
 
     Logger.info("==> completed.")
   end

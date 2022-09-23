@@ -9,6 +9,7 @@ defmodule GloboTicketWeb.ConnCase do
       import Plug.Conn
       import Phoenix.ConnTest
       import GloboTicketWeb.ConnCase
+      import AssertHTML
 
       alias GloboTicketWeb.Router.Helpers, as: Routes
 

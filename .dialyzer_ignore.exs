@@ -1,3 +1,1 @@
-[
-  ~r/test\/support\/.*\.ex.*unknown_function/
-]
+apps/utils/.dialyzer_ignore.exs

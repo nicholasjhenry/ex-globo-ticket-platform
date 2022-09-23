@@ -23,7 +23,7 @@ defmodule GloboTicketDemo.MixProject do
   end
 
   defp aliases do
-    [setup: []]
+    [setup: ["run -e 'GloboTicketDemo.Tasks.Setup.exec()'"]]
   end
 
   defp deps do

@@ -1,4 +1,4 @@
-defmodule GloboTicket.Schema do
+defmodule GloboTicket.Entity do
   @moduledoc false
 
   defmacro __using__(_opts) do
@@ -7,12 +7,10 @@ defmodule GloboTicket.Schema do
 
       import Ecto.Changeset
       import Ecto.Query
-      import GloboTicket.Schema
+      import GloboTicket.Record
 
       alias Ecto.Changeset
       alias Ecto.Query
-
-      @timestamps_opts [type: :utc_datetime_usec]
 
       @type t :: %__MODULE__{}
       @type changeset :: Ecto.Changeset.t(__MODULE__.t())

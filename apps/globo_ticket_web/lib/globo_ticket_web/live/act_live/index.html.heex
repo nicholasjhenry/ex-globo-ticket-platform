@@ -1,0 +1,45 @@
+<div data-resource-type="act">
+  <h1>Listing Acts</h1>
+
+  <%= if @live_action in [:new, :edit] do %>
+    <.modal return_to={Routes.act_index_path(@socket, :index)}>
+      <.live_component module={GloboTicketWeb.ActLive.FormComponent} id={@act.id || :new} title={@page_title} action={@live_action} act={@act} return_to={Routes.act_index_path(@socket, :index)} />
+    </.modal>
+  <% end %>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= for act <- @acts do %>
+        <tr data-resource-id={act.id}>
+          <td data-resource-attr="title"><%= act.title %></td>
+
+          <td>
+            <span>
+              <%= live_redirect("Show", to: Routes.act_show_path(@socket, :show, act), data: [action: "show"]) %>
+            </span>
+            <span>
+              <%= live_patch("Edit", to: Routes.act_index_path(@socket, :edit, act), data: [action: "edit"]) %>
+            </span>
+            <span>
+              <%= link("Delete",
+                to: "#",
+                phx_click: "delete",
+                phx_value_id: act.id,
+                data: [confirm: "Are you sure?", action: "delete"]
+              ) %>
+            </span>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <span><%= live_patch("New Act", to: Routes.act_index_path(@socket, :new, @id), data: [action: "new"]) %></span>
+</div>

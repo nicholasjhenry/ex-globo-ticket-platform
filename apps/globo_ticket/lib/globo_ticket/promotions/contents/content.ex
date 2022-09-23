@@ -16,9 +16,9 @@ defmodule GloboTicket.Promotions.Contents.Content do
     |> validate_required([:id, :body, :name, :type])
   end
 
-  def from_params(struct, params) do
+  def parse(struct, params) do
     struct
     |> changeset(params)
-    |> Ecto.Changeset.apply_action(:converted)
+    |> apply_action(:parsed)
   end
 end

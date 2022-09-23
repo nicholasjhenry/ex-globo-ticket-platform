@@ -40,7 +40,7 @@ defmodule GloboTicketWeb.ActLive.FormComponent do
     act_params = Map.put(act_params, "image", List.first(uploaded_files))
 
     with {:ok, act} <-
-           Acts.Act.from_params(socket.assigns.act, act_params),
+           Acts.Act.parse(socket.assigns.act, act_params),
          {:ok, _act} <- Acts.Handlers.Commands.save_act(act) do
       {:noreply,
        socket
@@ -55,7 +55,7 @@ defmodule GloboTicketWeb.ActLive.FormComponent do
 
   defp save_act(socket, :edit, act_params) do
     with {:ok, act} <-
-           Acts.Act.from_params(socket.assigns.act, act_params),
+           Acts.Act.parse(socket.assigns.act, act_params),
          {:ok, _act} <- Acts.Handlers.Commands.save_act(act) do
       {:noreply,
        socket
@@ -76,7 +76,7 @@ defmodule GloboTicketWeb.ActLive.FormComponent do
         type: entry.client_type
       }
 
-      {:ok, content} = Contents.Content.from_params(%Contents.Content{}, attrs)
+      {:ok, content} = Contents.Content.parse(%Contents.Content{}, attrs)
       {:ok, content} = Contents.Handlers.Commands.save_content(content)
 
       Uploads.cp!(socket, path, content.name)

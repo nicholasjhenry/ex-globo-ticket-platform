@@ -73,6 +73,7 @@ jobs:
       - run: mix format --check-formatted
       - run: mix ecto.migrate
       - run: mix credo --strict
+      - run: mix cmd --app globo_ticket_web mix uploads.mk_dir
       - run: mix test
 
 workflows:

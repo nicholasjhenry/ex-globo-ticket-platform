@@ -2,6 +2,8 @@ defmodule GloboTicketWeb.ActLive.FormComponent do
   use GloboTicketWeb, :live_component
 
   alias GloboTicket.Promotions.Acts
+  alias GloboTicket.Promotions.Contents
+  alias GloboTicketWeb.Uploads
 
   import Phoenix.Component
 
@@ -66,12 +68,18 @@ defmodule GloboTicketWeb.ActLive.FormComponent do
   end
 
   defp handle_upload(socket) do
-    consume_uploaded_entries(socket, :image, fn %{path: path}, _entry ->
-      dest =
-        Path.join([:code.priv_dir(:globo_ticket_web), "static", "uploads", Path.basename(path)])
+    consume_uploaded_entries(socket, :image, fn %{path: path}, entry ->
+      attrs = %{
+        id: entry.uuid,
+        body: File.read!(path),
+        name: entry.client_name,
+        type: entry.client_type
+      }
 
-      File.cp!(path, dest)
-      {:ok, Routes.static_path(socket, "/uploads/#{Path.basename(dest)}")}
+      {:ok, content} = Contents.Content.from_params(%Contents.Content{}, attrs)
+      {:ok, content} = Contents.Handlers.Commands.save_content(content)
+
+      Uploads.cp!(socket, path, content.name)
     end)
   end
 end

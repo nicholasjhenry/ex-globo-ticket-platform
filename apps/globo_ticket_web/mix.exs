@@ -62,6 +62,7 @@ defmodule GloboTicketWeb.MixProject do
     [
       setup: ["deps.get"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
+      "uploads.mk_dir": ["run -e 'GloboTicketWeb.Uploads.mk_dir!()'"],
       "assets.deploy": ["esbuild default --minify", "phx.digest"]
     ]
   end

@@ -20,7 +20,7 @@ defmodule GloboTicket.Promotions.VenuesTest do
     assert Enum.any?(venues, &(&1.id == venue_info.id))
   end
 
-  test "when venue added twice then one menu is added" do
+  test "when venue added twice then one venue is added" do
     venue_info = Controls.Venue.example()
     _result = Handlers.Commands.save_venue(venue_info)
 

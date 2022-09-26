@@ -8,7 +8,7 @@ defmodule GloboTicket.Promotions.Contents.Controls.Content do
   def example(attrs \\ %{}) do
     defaults = %{
       id: Identifier.Uuid.Controls.Static.example(),
-      name: "image.png",
+      name: "image_1.png",
       type: "image/png",
       body: File.read!(pathname())
     }
@@ -22,6 +22,6 @@ defmodule GloboTicket.Promotions.Contents.Controls.Content do
   end
 
   defp pathname do
-    Path.join([:code.priv_dir(:globo_ticket), "controls", "image.png"])
+    Path.join([:code.priv_dir(:globo_ticket), "controls", "image_1.png"])
   end
 end

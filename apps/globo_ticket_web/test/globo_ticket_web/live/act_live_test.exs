@@ -48,7 +48,7 @@ defmodule GloboTicketWeb.ActLiveTest do
           Contents.Controls.Image.example()
         ])
 
-      assert render_upload(image, "image.png") =~ "100%"
+      assert render_upload(image, "image_1.png") =~ "100%"
 
       {:ok, _, html} =
         index_live

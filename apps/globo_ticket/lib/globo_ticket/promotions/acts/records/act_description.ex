@@ -16,7 +16,8 @@ defmodule GloboTicket.Promotions.Acts.Records.ActDescription do
   end
 
   def equal?(last_snapshot, next_snapshot) do
-    last_snapshot.title == next_snapshot.title
+    last_snapshot.title == next_snapshot.title &&
+      last_snapshot.image == next_snapshot.image
   end
 
   def from_entity(entity, record) do

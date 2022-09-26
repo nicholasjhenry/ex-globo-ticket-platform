@@ -2,10 +2,10 @@ defmodule GloboTicketWeb.ActLive.FormComponent do
   use GloboTicketWeb, :live_component
 
   alias GloboTicket.Promotions.Acts
-  alias GloboTicket.Promotions.Contents
   alias GloboTicketWeb.Uploads
 
   import Phoenix.Component
+  import GloboTicketWeb.Uploads, only: [error_to_string: 1]
 
   @impl true
   def update(%{act: act} = assigns, socket) do
@@ -23,6 +23,8 @@ defmodule GloboTicketWeb.ActLive.FormComponent do
 
   @impl true
   def handle_event("validate", %{"act" => act_params}, socket) do
+    act_params = Uploads.put_upload_params(act_params, socket, :image)
+
     changeset =
       socket.assigns.act
       |> Acts.Act.changeset(act_params)
@@ -36,8 +38,10 @@ defmodule GloboTicketWeb.ActLive.FormComponent do
   end
 
   defp save_act(socket, :new, act_params) do
-    uploaded_files = handle_upload(socket)
-    act_params = Map.put(act_params, "image", List.first(uploaded_files))
+    uploaded_files = Uploads.handle_upload(socket, :image)
+
+    act_params =
+      Uploads.put_uploaded_params(act_params, :image, uploaded_files, socket.assigns.act.image)
 
     with {:ok, act} <-
            Acts.Act.parse(socket.assigns.act, act_params),
@@ -54,32 +58,22 @@ defmodule GloboTicketWeb.ActLive.FormComponent do
   end
 
   defp save_act(socket, :edit, act_params) do
+    uploaded_files = Uploads.handle_upload(socket, :image)
+
+    act_params =
+      Uploads.put_uploaded_params(act_params, :image, uploaded_files, socket.assigns.act.image)
+
     with {:ok, act} <-
            Acts.Act.parse(socket.assigns.act, act_params),
          {:ok, _act} <- Acts.Handlers.Commands.save_act(act) do
       {:noreply,
        socket
+       |> update(:uploaded_files, &(&1 ++ uploaded_files))
        |> put_flash(:info, "Act updated successfully")
        |> push_redirect(to: socket.assigns.return_to)}
     else
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
     end
-  end
-
-  defp handle_upload(socket) do
-    consume_uploaded_entries(socket, :image, fn %{path: path}, entry ->
-      attrs = %{
-        id: entry.uuid,
-        body: File.read!(path),
-        name: entry.client_name,
-        type: entry.client_type
-      }
-
-      {:ok, content} = Contents.Content.parse(%Contents.Content{}, attrs)
-      {:ok, content} = Contents.Handlers.Commands.save_content(content)
-
-      Uploads.cp!(socket, path, content.name)
-    end)
   end
 end

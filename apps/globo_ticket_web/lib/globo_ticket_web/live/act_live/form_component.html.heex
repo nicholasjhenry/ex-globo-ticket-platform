@@ -11,11 +11,16 @@
     <% end %>
 
     <%= live_file_input(@uploads.image) %>
+    <%= error_tag(f, :image) %>
 
     <%= for entry <- @uploads.image.entries do %>
       <article class="upload-entry">
         <progress value={entry.progress} max="100"><%= entry.progress %>%</progress>
       </article>
+
+      <%= for err <- upload_errors(@uploads.image, entry) do %>
+        <p class="alert alert-danger"><%= error_to_string(err) %></p>
+      <% end %>
     <% end %>
 
     <.submit_button label="Save" phx_disable_with="Saving..." />

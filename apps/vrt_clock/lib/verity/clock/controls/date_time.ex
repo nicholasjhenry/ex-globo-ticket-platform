@@ -1,4 +1,4 @@
-defmodule Verity.Clock.DateTime do
+defmodule Verity.Clock.Controls.DateTime do
   @moduledoc """
   A date-time provider.
   """
@@ -7,6 +7,6 @@ defmodule Verity.Clock.DateTime do
 
   @spec example() :: t
   def example do
-    ~U[2000-01-01 00:00:00Z]
+    ~U[2000-01-01 00:00:00.000000Z]
   end
 end

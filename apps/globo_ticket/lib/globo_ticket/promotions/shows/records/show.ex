@@ -14,6 +14,8 @@ defmodule GloboTicket.Promotions.Shows.Records.Show do
       references: :uuid,
       type: Ecto.UUID
 
+    has_one :cancellation, Shows.Records.ShowCancelled
+
     field :start_at, :utc_datetime_usec
 
     timestamps(updated_at: false)

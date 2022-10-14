@@ -31,7 +31,7 @@ defmodule GloboTicketWeb.VenueLive.FormComponent do
 
   defp save_venue(socket, :new, venue_params) do
     with {:ok, venue} <-
-           Venues.Venue.from_params(socket.assigns.venue, venue_params),
+           Venues.Venue.parse(socket.assigns.venue, venue_params),
          {:ok, _venue} <- Venues.Handlers.Commands.save_venue(venue) do
       {:noreply,
        socket
@@ -45,7 +45,7 @@ defmodule GloboTicketWeb.VenueLive.FormComponent do
 
   defp save_venue(socket, :edit, venue_params) do
     with {:ok, venue} <-
-           Venues.Venue.from_params(socket.assigns.venue, venue_params),
+           Venues.Venue.parse(socket.assigns.venue, venue_params),
          {:ok, _venue} <- Venues.Handlers.Commands.save_venue(venue) do
       {:noreply,
        socket

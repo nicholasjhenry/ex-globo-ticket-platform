@@ -55,8 +55,9 @@ defmodule GloboTicketWeb.FormComponent do
 
   defp prepare_assigns(assigns, class: class) do
     input_attrs = assigns_to_attributes(assigns, [:f, :field, :label])
-      assigns
-      |> assign_new(:label, fn -> nil end)
-      |> assign(input_attrs: [{:class, class} | input_attrs])
+
+    assigns
+    |> assign_new(:label, fn -> nil end)
+    |> assign(input_attrs: [{:class, class} | input_attrs])
   end
 end

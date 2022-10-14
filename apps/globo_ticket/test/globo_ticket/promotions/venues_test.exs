@@ -11,20 +11,20 @@ defmodule GloboTicket.Promotions.VenuesTest do
   end
 
   test "when venue added then a venue is returned" do
-    venue_info = Controls.Venue.example()
+    venue = Controls.Venue.example()
 
-    result = Handlers.Commands.save_venue(venue_info)
+    result = Handlers.Commands.save_venue(venue)
 
     assert {:ok, _record} = result
     venues = Handlers.Queries.list_venues()
-    assert Enum.any?(venues, &(&1.id == venue_info.id))
+    assert Enum.any?(venues, &(&1.id == venue.id))
   end
 
-  test "when venue added twice then one menu is added" do
-    venue_info = Controls.Venue.example()
-    _result = Handlers.Commands.save_venue(venue_info)
+  test "when venue added twice then one venue is added" do
+    venue = Controls.Venue.example()
+    _result = Handlers.Commands.save_venue(venue)
 
-    result = Handlers.Commands.save_venue(venue_info)
+    result = Handlers.Commands.save_venue(venue)
 
     assert {:ok, _record} = result
     venues = Handlers.Queries.list_venues()
@@ -32,79 +32,79 @@ defmodule GloboTicket.Promotions.VenuesTest do
   end
 
   test "when set venue description then venue description is returned" do
-    venue_info = Controls.Venue.example(name: "American Airlines Center")
+    venue = Controls.Venue.example(name: "American Airlines Center")
 
-    _result = Handlers.Commands.save_venue(venue_info)
+    _result = Handlers.Commands.save_venue(venue)
 
-    venue = Store.get_venue!(venue_info.id)
+    venue = Store.get_venue!(venue.id)
     assert venue.name == "American Airlines Center"
   end
 
   test "when set venue description to the same description then nothing is saved" do
-    venue_info = Controls.Venue.example(name: "American Airlines Center")
-    _result = Handlers.Commands.save_venue(venue_info)
-    first_snapshot = Store.get_venue!(venue_info.id)
+    venue = Controls.Venue.example(name: "American Airlines Center")
+    _result = Handlers.Commands.save_venue(venue)
+    first_snapshot = Store.get_venue!(venue.id)
 
-    _result = Handlers.Commands.save_venue(venue_info)
+    _result = Handlers.Commands.save_venue(venue)
 
-    second_snapshot = Store.get_venue!(venue_info.id)
+    second_snapshot = Store.get_venue!(venue.id)
     assert second_snapshot.last_updated_ticks == first_snapshot.last_updated_ticks
   end
 
   test "when venue is modified concurrently then exception is thrown" do
-    venue_info = Controls.Venue.example(name: "American Airlines Center")
+    venue = Controls.Venue.example(name: "American Airlines Center")
 
-    _result = Handlers.Commands.save_venue(venue_info)
-    venue = Store.get_venue!(venue_info.id)
+    _result = Handlers.Commands.save_venue(venue)
+    venue = Store.get_venue!(venue.id)
 
-    venue_info =
+    venue =
       Controls.Venue.example(
         name: "Change 1",
         last_updated_ticks: venue.last_updated_ticks
       )
 
-    _result = Handlers.Commands.save_venue(venue_info)
+    _result = Handlers.Commands.save_venue(venue)
 
     assert_raise Ecto.StaleEntryError, fn ->
-      venue_info =
+      venue =
         Controls.Venue.example(
           name: "Change 2",
           last_updated_ticks: venue.last_updated_ticks
         )
 
-      Handlers.Commands.save_venue(venue_info)
+      Handlers.Commands.save_venue(venue)
     end
   end
 
   test "when set venue location then venue location is returned" do
-    venue_info =
+    venue =
       Controls.Venue.example(
         latitude: 45.508888,
         longitude: -73.561668
       )
 
-    _result = Handlers.Commands.save_venue(venue_info)
+    _result = Handlers.Commands.save_venue(venue)
 
-    venue = Store.get_venue!(venue_info.id)
+    venue = Store.get_venue!(venue.id)
     assert venue.latitude == 45.508888
     assert venue.longitude == -73.561668
   end
 
   test "when set venue timezone then venue timezone is returned" do
-    venue_info = Controls.Venue.example(time_zone: "America/Toronto")
+    venue = Controls.Venue.example(time_zone: "America/Toronto")
 
-    _result = Handlers.Commands.save_venue(venue_info)
+    _result = Handlers.Commands.save_venue(venue)
 
-    venue = Store.get_venue!(venue_info.id)
+    venue = Store.get_venue!(venue.id)
     assert venue.time_zone == "America/Toronto"
   end
 
   test "when venue deleted venue is not returned" do
-    venue_info = Controls.Venue.example()
-    _result = Handlers.Commands.save_venue(venue_info)
+    venue = Controls.Venue.example()
+    _result = Handlers.Commands.save_venue(venue)
 
-    _result = Handlers.Commands.delete_venue(venue_info.id)
+    _result = Handlers.Commands.delete_venue(venue.id)
 
-    assert_raise Ecto.NoResultsError, fn -> Store.get_venue!(venue_info.id) end
+    assert_raise Ecto.NoResultsError, fn -> Store.get_venue!(venue.id) end
   end
 end

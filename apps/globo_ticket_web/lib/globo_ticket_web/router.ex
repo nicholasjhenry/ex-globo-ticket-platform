@@ -19,12 +19,21 @@ defmodule GloboTicketWeb.Router do
 
     get "/", PageController, :index
 
+    # Resource: Venues
     live "/venues", VenueLive.Index, :index
     live "/venues/new/:id", VenueLive.Index, :new
     live "/venues/:id/edit", VenueLive.Index, :edit
 
     live "/venue/:id", VenueLive.Show, :show
     live "/venue/:id/show/edit", VenueLive.Show, :edit
+
+    # Resource: Acts
+    live "/acts", ActLive.Index, :index
+    live "/acts/new/:id", ActLive.Index, :new
+    live "/acts/:id/edit", ActLive.Index, :edit
+
+    live "/act/:id", ActLive.Show, :show
+    live "/act/:id/show/edit", ActLive.Show, :edit
   end
 
   if Mix.env() in [:dev, :test] do

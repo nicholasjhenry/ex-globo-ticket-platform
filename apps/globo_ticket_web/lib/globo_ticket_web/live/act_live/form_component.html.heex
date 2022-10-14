@@ -1,0 +1,28 @@
+<div data-resource-type="act">
+  <h2><%= @title %></h2>
+
+  <.form let={f} for={@changeset} id="act-form" as="act" phx-target={@myself} phx-change="validate" phx-submit="save">
+    <.input type="text" f={f} field={:title} />
+
+    <%= label(f, :image) %>
+
+    <%= for entry <- @uploads.image.entries do %>
+      <%= live_img_preview(entry) %>
+    <% end %>
+
+    <%= live_file_input(@uploads.image) %>
+    <%= error_tag(f, :image) %>
+
+    <%= for entry <- @uploads.image.entries do %>
+      <article class="upload-entry">
+        <progress value={entry.progress} max="100"><%= entry.progress %>%</progress>
+      </article>
+
+      <%= for err <- upload_errors(@uploads.image, entry) do %>
+        <p class="alert alert-danger"><%= error_to_string(err) %></p>
+      <% end %>
+    <% end %>
+
+    <.submit_button label="Save" phx_disable_with="Saving..." />
+  </.form>
+</div>

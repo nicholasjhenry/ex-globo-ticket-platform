@@ -20,9 +20,9 @@ defmodule GloboTicket.Promotions.Venues.Venue do
     |> validate_required([:id, :name, :city, :latitude, :longitude, :time_zone])
   end
 
-  def from_params(struct, params) do
+  def parse(struct, params) do
     struct
     |> changeset(params)
-    |> Ecto.Changeset.apply_action(:converted)
+    |> apply_action(:parsed)
   end
 end

@@ -1,0 +1,30 @@
+<div data-resource-type="act">
+  <h1>Show Act</h1>
+
+  <%= if @live_action in [:edit] do %>
+    <.modal return_to={Routes.act_show_path(@socket, :show, @act)}>
+      <.live_component module={GloboTicketWeb.ActLive.FormComponent} id={@act.id} title={@page_title} action={@live_action} act={@act} return_to={Routes.act_show_path(@socket, :show, @act)} />
+    </.modal>
+  <% end %>
+
+  <ul data-resource-id={@act.id}>
+    <li data-resource-attr="title">
+      <strong>Title:</strong>
+      <%= @act.title %>
+    </li>
+
+    <li data-resource-attr="image">
+      <strong>Image:</strong>
+      <%= if @act.image do %>
+        <img src={Routes.static_path(@socket, @act.image)} />
+      <% else %>
+        <img src="https://via.placeholder.com/150" />
+      <% end %>
+    </li>
+  </ul>
+
+  <span>
+    <%= live_patch("Edit", to: Routes.act_show_path(@socket, :edit, @act), class: "button", data: [action: "edit"]) %>
+  </span>
+  | <span><%= live_redirect("Back", to: Routes.act_index_path(@socket, :index)) %></span>
+</div>

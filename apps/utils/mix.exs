@@ -12,7 +12,6 @@ defmodule Utils.MixProject do
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      aliases: aliases(),
       preferred_cli_env: [
         "test.watch": :test
       ]
@@ -23,10 +22,6 @@ defmodule Utils.MixProject do
     [
       extra_applications: [:logger]
     ]
-  end
-
-  defp aliases do
-    [setup: []]
   end
 
   defp deps do

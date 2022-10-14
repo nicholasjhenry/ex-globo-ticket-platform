@@ -28,9 +28,15 @@ defmodule GloboTicket.Umbrella.MixProject do
   end
 
   defp aliases do
+    setup = [
+      "cmd --app globo_ticket mix setup",
+      "cmd --app globo_ticket_demo mix setup",
+      "cmd --app globo_ticket_web mix setup"
+    ]
+
     [
       # run `mix setup` in all child apps
-      setup: ["cmd mix setup"],
+      setup: setup,
       check: ["compile --warnings-as-errors", "credo --strict", "dialyzer"]
     ]
   end

@@ -6,6 +6,9 @@ defmodule GloboTicketWeb.ActLiveTest do
 
   alias GloboTicket.Promotions.Acts
   alias GloboTicket.Promotions.Contents
+  alias GloboTicket.Promotions.Shows
+  alias GloboTicket.Promotions.Venues
+  alias Verity.Clock
   alias Verity.Identifier
 
   @form_identifier "#act-form"
@@ -14,6 +17,21 @@ defmodule GloboTicketWeb.ActLiveTest do
     act = Acts.Controls.Act.example()
     {:ok, _act} = Acts.Handlers.Commands.save_act(act)
     %{act: act}
+  end
+
+  defp create_venue(_context) do
+    venue = Venues.Controls.Venue.example()
+    {:ok, _venue} = Venues.Handlers.Commands.save_venue(venue)
+    %{venue: venue}
+  end
+
+  defp schedule_show(%{act: act, venue: venue}) do
+    {:ok, _show} =
+      Shows.Handlers.Commands.schedule_show(act.id, venue.id, Clock.Controls.DateTime.example())
+
+    [show] = Shows.Handlers.Queries.list_shows(act.id)
+
+    %{show: show}
   end
 
   describe "Index" do
@@ -134,7 +152,7 @@ defmodule GloboTicketWeb.ActLiveTest do
 
       show_live
       |> edit_act()
-      |> assert_html("h2", "Edit Act")
+      |> assert_html("[data-resource-type=act] h2", "Edit Act")
 
       assert_patch(show_live, Routes.act_show_path(conn, :edit, act))
 
@@ -166,6 +184,18 @@ defmodule GloboTicketWeb.ActLiveTest do
       |> form(@form_identifier, act: attrs)
       |> render_submit()
       |> follow_redirect(conn, Routes.act_show_path(conn, :show, act))
+    end
+  end
+
+  describe "Shows" do
+    setup [:create_act, :create_venue, :schedule_show]
+
+    test "lists show", %{conn: conn, act: act, show: show} do
+      {:ok, _show_live, html} = show_act(conn, act)
+
+      html
+      |> assert_html("[data-resource-type=show] h2", "Listing Shows")
+      |> assert_resource(:show, :start_at, show.venue.id, Clock.Controls.DateTime.string())
     end
   end
 

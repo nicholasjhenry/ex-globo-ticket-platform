@@ -1,18 +1,16 @@
 defmodule BusDriver do
-  @moduledoc """
-  Documentation for `BusDriver`.
-  """
+  @moduledoc false
 
-  @doc """
-  Hello world.
+  def publish(topic, message, opts \\ []) do
+    handlers = Keyword.get(opts, :handlers, get_handlers())
 
-  ## Examples
+    handlers
+    |> Enum.filter(fn {handler_topic, _handler} -> handler_topic == topic end)
+    |> Enum.map(&elem(&1, 1))
+    |> Enum.each(& &1.handle(message))
+  end
 
-      iex> BusDriver.hello()
-      :world
-
-  """
-  def hello do
-    :world
+  defp get_handlers do
+    Application.fetch_env!(:bus_driver, :handlers)
   end
 end

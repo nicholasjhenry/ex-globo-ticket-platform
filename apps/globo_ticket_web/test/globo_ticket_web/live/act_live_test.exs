@@ -229,6 +229,20 @@ defmodule GloboTicketWeb.ActLiveTest do
       |> assert_flash(:info, "Show created successfully")
       |> assert_resource(:show, :start_at, venue.id, to_string(date_time_as_string))
     end
+
+    test "cancels a scheduled show", %{conn: conn, act: act, venue: venue} do
+      {:ok, show_live, _html} = show_act(conn, act)
+
+      show_live
+      |> delete_show(venue)
+      |> refute_resource(:venue, venue)
+    end
+
+    defp delete_show(live, venue) do
+      live
+      |> element("[data-resource-id=#{venue.id}] [data-action=delete]")
+      |> render_click()
+    end
   end
 
   defp change_form(live, attrs) do

@@ -29,7 +29,9 @@
               <%= link("Delete",
                 to: "#",
                 phx_click: "delete",
-                phx_value_id: @act.id,
+                phx_value_venue_id: show.venue.id,
+                phx_value_start_at: show.start_at,
+                phx_target: @myself,
                 data: [confirm: "Are you sure?", action: "delete"]
               ) %>
             </span>

@@ -1,0 +1,45 @@
+<div data-resource-type="show">
+  <h2>Listing Shows</h2>
+
+  <%= if @live_action in [:new_show] do %>
+    <.modal return_to={Routes.act_index_path(@socket, :index)}>
+      <.live_component module={GloboTicketWeb.ActLive.Shows.FormComponent} id={"new-show-" <> @act.id} act_id={@act.id} title={@page_title} action={@live_action} act={@act} return_to={Routes.act_show_path(@socket, :show, @act)} />
+    </.modal>
+  <% end %>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Venue Name</th>
+        <th>Venue City</th>
+        <th>Start at</th>
+
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= for show <- @shows do %>
+        <tr data-resource-id={show.venue.id}>
+          <td data-resource-attr="venue_name"><%= show.venue.name %></td>
+          <td data-resource-attr="venue_city"><%= show.venue.city %></td>
+          <td data-resource-attr="start_at"><%= show.start_at %></td>
+
+          <td>
+            <span>
+              <%= link("Delete",
+                to: "#",
+                phx_click: "delete",
+                phx_value_venue_id: show.venue.id,
+                phx_value_start_at: show.start_at,
+                phx_target: @myself,
+                data: [confirm: "Are you sure?", action: "delete"]
+              ) %>
+            </span>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <span><%= live_patch("New Show", to: Routes.act_show_path(@socket, :new_show, @act.id), data: [action: "new"]) %></span>
+</div>

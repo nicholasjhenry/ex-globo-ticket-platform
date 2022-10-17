@@ -2,8 +2,8 @@ defmodule GloboTicket.Promotions.ShowsTest do
   use GloboTicket.DataCase
 
   alias GloboTicket.Promotions.Acts
-  alias GloboTicket.Promotions.Venues
   alias GloboTicket.Promotions.Shows.Handlers
+  alias GloboTicket.Promotions.Venues
 
   alias Verity.Clock
 

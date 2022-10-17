@@ -3,8 +3,8 @@ defmodule GloboTicket.Control do
 
   defmacro __using__(_opts) do
     quote do
-      alias Verity.Identifier
       alias Verity.Clock
+      alias Verity.Identifier
     end
   end
 end

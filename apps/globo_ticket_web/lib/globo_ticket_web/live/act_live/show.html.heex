@@ -29,4 +29,6 @@
   | <span><%= live_redirect("Back", to: Routes.act_index_path(@socket, :index)) %></span>
 </div>
 
-<.live_component module={GloboTicketWeb.ActLive.Shows.IndexComponent} id="shows-index" act={@act} />
+<hr />
+
+<.live_component module={GloboTicketWeb.ActLive.Shows.IndexComponent} id="shows-index" act={@act} live_action={@live_action} page_title={@page_title} />

@@ -34,6 +34,9 @@ defmodule GloboTicketWeb.Router do
 
     live "/act/:id", ActLive.Show, :show
     live "/act/:id/show/edit", ActLive.Show, :edit
+
+    # Resource: Shows
+    live "/act/:id/show/show/new", ActLive.Show, :new_show
   end
 
   if Mix.env() in [:dev, :test] do

@@ -134,6 +134,12 @@ defmodule GloboTicketWeb.ActLiveTest do
       |> element("[data-resource-id=#{act.id}] [data-action=delete]")
       |> render_click()
     end
+
+    defp new_show(live) do
+      live
+      |> element("[data-resource-type=show] [data-action=new]")
+      |> render_click()
+    end
   end
 
   describe "Show" do
@@ -197,6 +203,32 @@ defmodule GloboTicketWeb.ActLiveTest do
       |> assert_html("[data-resource-type=show] h2", "Listing Shows")
       |> assert_resource(:show, :start_at, show.venue.id, Clock.Controls.DateTime.string())
     end
+
+    test "schedules a new show", %{conn: conn, act: act} do
+      venue = Venues.Controls.Venue.example(id: Identifier.Uuid.Controls.Random.example())
+      {:ok, _venue} = Venues.Handlers.Commands.save_venue(venue)
+
+      {:ok, show_live, _html} = show_act(conn, act)
+
+      show_live
+      |> new_show()
+      |> assert_html("[data-resource-type=show] h3", "New Show")
+
+      assert_patch(show_live, Routes.act_show_path(conn, :new_show, act))
+
+      create_attrs = Shows.Controls.Show.Attrs.valid(venue_id: venue.id)
+
+      {:ok, _, html} =
+        show_live
+        |> submit_show_form(show: create_attrs)
+        |> follow_redirect(conn, Routes.act_show_path(conn, :show, act))
+
+      date_time_as_string = Clock.Controls.DateTime.to_string(~U[2027-01-01 00:00:00.000000Z])
+
+      html
+      |> assert_flash(:info, "Show created successfully")
+      |> assert_resource(:show, :start_at, venue.id, to_string(date_time_as_string))
+    end
   end
 
   defp change_form(live, attrs) do
@@ -208,6 +240,12 @@ defmodule GloboTicketWeb.ActLiveTest do
   defp submit_form(live, attrs) do
     live
     |> form(@form_identifier, attrs)
+    |> render_submit()
+  end
+
+  defp submit_show_form(live, attrs) do
+    live
+    |> form("#show-form", attrs)
     |> render_submit()
   end
 end

@@ -1,6 +1,12 @@
 <div data-resource-type="show">
   <h2>Listing Shows</h2>
 
+  <%= if @live_action in [:new_show] do %>
+    <.modal return_to={Routes.act_index_path(@socket, :index)}>
+      <.live_component module={GloboTicketWeb.ActLive.Shows.FormComponent} id={"new-show-" <> @act.id} act_id={@act.id} title={@page_title} action={@live_action} act={@act} return_to={Routes.act_show_path(@socket, :show, @act)} />
+    </.modal>
+  <% end %>
+
   <table>
     <thead>
       <tr>
@@ -20,9 +26,6 @@
 
           <td>
             <span>
-              <%= live_patch("Edit", to: Routes.act_index_path(@socket, :edit, @act), data: [action: "edit"]) %>
-            </span>
-            <span>
               <%= link("Delete",
                 to: "#",
                 phx_click: "delete",
@@ -36,5 +39,5 @@
     </tbody>
   </table>
 
-  <span><%= live_patch("New Show", to: Routes.act_index_path(@socket, :new, @id), data: [action: "new"]) %></span>
+  <span><%= live_patch("New Show", to: Routes.act_show_path(@socket, :new_show, @act.id), data: [action: "new"]) %></span>
 </div>

@@ -12,6 +12,10 @@ defmodule Verity.Clock.Controls.DateTime do
 
   @spec string() :: String.t()
   def string do
-    example() |> to_string |> String.replace(" ", "T")
+    example() |> __MODULE__.to_string()
+  end
+
+  def to_string(date_time) do
+    date_time |> Kernel.to_string() |> String.replace(" ", "T")
   end
 end

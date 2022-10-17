@@ -18,4 +18,5 @@ defmodule GloboTicketWeb.ActLive.Show do
 
   defp page_title(:show), do: "Show Act"
   defp page_title(:edit), do: "Edit Act"
+  defp page_title(:new_show), do: "New Show"
 end

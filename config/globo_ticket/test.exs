@@ -7,3 +7,6 @@ config :globo_ticket, GloboTicket.Repo,
   database: "globo_ticket_test#{System.get_env("MIX_TEST_PARTITION")}",
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10
+
+config :bus_driver,
+  publisher: BusDriver.Publisher.Substitute

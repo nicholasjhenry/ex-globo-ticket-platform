@@ -6,9 +6,9 @@ defmodule BusDriverTest do
       {:subscriptions, __MODULE__}
     ]
 
-    BusDriver.publish(:subscriptions, :test_message, handlers: handlers)
+    BusDriver.publish(:test_topic, :test_message, handlers: handlers)
 
-    assert_received {:received, :test_message}
+    assert_received {:test_topic, :test_message}
   end
 
   def handle(message) do

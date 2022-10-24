@@ -20,12 +20,4 @@ defmodule GloboTicket.Promotions.Shows.Records.Show do
 
     timestamps(updated_at: false)
   end
-
-  def to_entity(record) do
-    %Shows.Show{
-      act_id: record.act_uuid,
-      venue: Venues.Records.Venue.to_entity(record.venue),
-      start_at: record.start_at
-    }
-  end
 end

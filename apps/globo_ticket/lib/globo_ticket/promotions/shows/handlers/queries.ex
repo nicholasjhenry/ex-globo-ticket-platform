@@ -3,6 +3,8 @@ defmodule GloboTicket.Promotions.Shows.Handlers.Queries do
 
   use GloboTicket.QueryHandler
 
+  alias GloboTicket.Promotions.Shows
+  alias GloboTicket.Promotions.Shows.Projection
   alias GloboTicket.Promotions.Shows.Records
   alias GloboTicket.Promotions.Venues
 
@@ -13,11 +15,13 @@ defmodule GloboTicket.Promotions.Shows.Handlers.Queries do
       Venues.Records.Venue
       |> Venues.Query.snapshots_query()
 
-    show_query
-    |> present
-    |> Repo.all()
-    |> Repo.preload(venue: venue_query)
-    |> Enum.map(&Records.Show.to_entity/1)
+    records =
+      show_query
+      |> present
+      |> Repo.all()
+      |> Repo.preload(venue: venue_query)
+
+    Enum.map(records, &Projection.apply_all(%Shows.Show{}, &1))
   end
 
   defp present(query) do

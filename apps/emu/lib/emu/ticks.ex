@@ -11,8 +11,17 @@ defmodule Emu.Ticks do
     ticks != {0, 0}
   end
 
-  def equal?(rhs, lhs) do
-    rhs == lhs
+  def compare(lhs, rhs) do
+    cond do
+      lhs == rhs ->
+        :eq
+
+      lhs > rhs ->
+        :gt
+
+      lhs < rhs ->
+        :lt
+    end
   end
 
   def from_date_time(nil), do: {0, 0}

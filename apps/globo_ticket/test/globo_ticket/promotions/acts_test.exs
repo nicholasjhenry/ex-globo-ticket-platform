@@ -3,6 +3,7 @@ defmodule GloboTicket.Promotions.ActsTest do
 
   alias GloboTicket.Promotions.Acts.Controls
   alias GloboTicket.Promotions.Acts.Handlers
+  alias GloboTicket.Promotions.Acts.Messages
   alias GloboTicket.Promotions.Acts.Store
 
   test "acts are initially empty" do
@@ -10,7 +11,7 @@ defmodule GloboTicket.Promotions.ActsTest do
     assert Enum.empty?(acts)
   end
 
-  test "when act added then a act is returned" do
+  test "when act added then an act is returned" do
     act = Controls.Act.example()
 
     result = Handlers.Commands.save_act(act)
@@ -38,6 +39,14 @@ defmodule GloboTicket.Promotions.ActsTest do
 
     act = Store.get_act!(act.id)
     assert act.title == "Gabriel Iglesias"
+  end
+
+  test "when description is modified then an event is published" do
+    act = Controls.Act.example(title: "Gabriel Iglesias")
+
+    _result = Handlers.Commands.save_act(act)
+
+    assert_received {:promotions, %Messages.Events.ActDescriptionChanged{}}
   end
 
   test "when set act description to the same description then nothing is saved" do

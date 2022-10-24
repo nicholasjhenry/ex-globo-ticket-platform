@@ -46,6 +46,7 @@ defmodule GloboTicket.MixProject do
       {:emu, in_umbrella: true},
       {:faker, "~> 0.17"},
       {:typed_struct, "~> 0.3.0"},
+      {:bus_driver, in_umbrella: true},
       {:utils, in_umbrella: true, only: :dev},
       {:vrt_clock, in_umbrella: true},
       {:vrt_identifier, in_umbrella: true}

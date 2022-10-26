@@ -60,6 +60,17 @@ defmodule GloboTicket.Promotions.ActsTest do
     assert second_snapshot.last_updated_ticks == first_snapshot.last_updated_ticks
   end
 
+  test "when set act description to the same description then no event is published" do
+    act = Controls.Act.example(title: "Gabriel Iglesias")
+    _result = Handlers.Commands.save_act(act)
+    assert_received {:promotions, %Messages.Events.ActDescriptionChanged{}}
+
+    act = Store.get_act!(act.id)
+    _result = Handlers.Commands.save_act(act)
+
+    refute_received {:promotions, %Messages.Events.ActDescriptionChanged{}}
+  end
+
   test "when act is modified concurrently then exception is thrown" do
     act = Controls.Act.example(title: "Gabriel Iglesias")
 

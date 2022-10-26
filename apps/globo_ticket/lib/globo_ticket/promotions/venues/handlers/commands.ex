@@ -4,6 +4,7 @@ defmodule GloboTicket.Promotions.Venues.Handlers.Commands do
   use GloboTicket.CommandHandler
 
   alias GloboTicket.Promotions.Venues
+  alias GloboTicket.Promotions.Venues.Messages
   alias GloboTicket.Promotions.Venues.Records
 
   def save_venue(venue) do
@@ -23,8 +24,30 @@ defmodule GloboTicket.Promotions.Venues.Handlers.Commands do
     end
   end
 
-  defp save_description(venue, record) do
-    save_snapshot(Repo, venue, record, :description)
+  defp save_description(venue, entity_record) do
+    with {:ok, description_record} <- save_snapshot(Repo, venue, entity_record, :description) do
+      last_updated_ticks = Ticks.from_date_time(description_record.inserted_at)
+
+      if Ticks.compare(last_updated_ticks, venue.last_updated_ticks) == :gt do
+        message = build_venue_description_changed(venue, description_record)
+        BusDriver.publish(:promotions, message)
+      end
+
+      {:ok, description_record}
+    end
+  end
+
+  defp build_venue_description_changed(venue, description_record) do
+    venue_description_representation = %Messages.Representations.VenueDescription{
+      city: description_record.city,
+      name: description_record.name,
+      modified_date: description_record.inserted_at
+    }
+
+    %Messages.Events.VenueDescriptionChanged{
+      venue_id: venue.id,
+      venue_description_representation: venue_description_representation
+    }
   end
 
   defp save_location(venue, record) do

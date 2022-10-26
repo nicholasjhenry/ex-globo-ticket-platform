@@ -51,7 +51,29 @@ defmodule GloboTicket.Promotions.Venues.Handlers.Commands do
   end
 
   defp save_location(venue, record) do
-    save_snapshot(Repo, venue, record, :location, :location_last_updated_ticks)
+    with {:ok, location_record} <-
+           save_snapshot(Repo, venue, record, :location, :location_last_updated_ticks) do
+      last_updated_ticks = Ticks.from_date_time(location_record.inserted_at)
+
+      if Ticks.compare(last_updated_ticks, venue.location_last_updated_ticks) == :gt do
+        message = build_venue_location_changed(venue, location_record)
+        BusDriver.publish(:promotions, message)
+      end
+
+      {:ok, location_record}
+    end
+  end
+
+  defp build_venue_location_changed(venue, location_record) do
+    venue_location_representation = %Messages.Representations.VenueLocation{
+      latitude: location_record.latitude,
+      longitude: location_record.longitude
+    }
+
+    %Messages.Events.VenueLocationChanged{
+      venue_id: venue.id,
+      venue_location_representation: venue_location_representation
+    }
   end
 
   defp save_time_zone(venue, record) do

@@ -46,8 +46,7 @@ defmodule Emu.Store do
   defp concurrency_check!(timestamp, last_snapshot) do
     updated_ticks = Ticks.from_date_time(last_snapshot.inserted_at)
 
-    if Ticks.any?(timestamp) &&
-         !Ticks.equal?(updated_ticks, timestamp) do
+    if Ticks.any?(timestamp) && Ticks.compare(updated_ticks, timestamp) != :eq do
       raise Ecto.StaleEntryError, action: :insert, changeset: %{data: last_snapshot}
     else
       :ok

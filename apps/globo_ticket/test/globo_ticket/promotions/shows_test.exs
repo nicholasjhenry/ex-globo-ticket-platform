@@ -3,6 +3,7 @@ defmodule GloboTicket.Promotions.ShowsTest do
 
   alias GloboTicket.Promotions.Acts
   alias GloboTicket.Promotions.Shows.Handlers
+  alias GloboTicket.Promotions.Shows.Messages
   alias GloboTicket.Promotions.Venues
 
   alias Verity.Clock
@@ -23,6 +24,16 @@ defmodule GloboTicket.Promotions.ShowsTest do
     shows = Handlers.Queries.list_shows(act_id)
 
     assert Enum.any?(shows, &(Date.compare(&1.start_at, start_at) == :eq))
+  end
+
+  test "when show is scheduled then an event is published" do
+    act_id = given_act()
+    venue_id = given_venue()
+
+    start_at = Clock.Controls.DateTime.example()
+    {:ok, _record} = Handlers.Commands.schedule_show(act_id, venue_id, start_at)
+
+    assert_received {:promotions, %Messages.Events.ShowAdded{}}
   end
 
   test "when show is scheduled twice then one show only is returned" do

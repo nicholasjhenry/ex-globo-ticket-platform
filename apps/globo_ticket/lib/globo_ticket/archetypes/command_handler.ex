@@ -6,6 +6,7 @@ defmodule GloboTicket.CommandHandler do
       import Ecto.Query, warn: false
       import Emu.Store
 
+      alias Emu.Ticks
       alias GloboTicket.Repo
     end
   end

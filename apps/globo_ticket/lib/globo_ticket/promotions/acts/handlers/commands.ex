@@ -3,8 +3,6 @@ defmodule GloboTicket.Promotions.Acts.Handlers.Commands do
 
   use GloboTicket.CommandHandler
 
-  alias Emu.Ticks
-
   alias GloboTicket.Promotions.Acts
   alias GloboTicket.Promotions.Acts.Messages
   alias GloboTicket.Promotions.Acts.Records

@@ -3,6 +3,7 @@ defmodule GloboTicket.Promotions.VenuesTest do
 
   alias GloboTicket.Promotions.Venues.Controls
   alias GloboTicket.Promotions.Venues.Handlers
+  alias GloboTicket.Promotions.Venues.Messages
   alias GloboTicket.Promotions.Venues.Store
 
   test "venues are initially empty" do
@@ -38,6 +39,14 @@ defmodule GloboTicket.Promotions.VenuesTest do
 
     venue = Store.get_venue!(venue.id)
     assert venue.name == "American Airlines Center"
+  end
+
+  test "when description is modified then an event is published" do
+    venue = Controls.Venue.example(name: "American Airlines Center")
+
+    _result = Handlers.Commands.save_venue(venue)
+
+    assert_received {:promotions, %Messages.Events.VenueDescriptionChanged{}}
   end
 
   test "when set venue description to the same description then nothing is saved" do

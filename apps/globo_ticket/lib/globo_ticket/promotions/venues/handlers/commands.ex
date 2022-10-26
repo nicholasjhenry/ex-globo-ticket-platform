@@ -77,7 +77,28 @@ defmodule GloboTicket.Promotions.Venues.Handlers.Commands do
   end
 
   defp save_time_zone(venue, record) do
-    save_snapshot(Repo, venue, record, :time_zone, :time_zone_last_updated_ticks)
+    with {:ok, time_zone_record} <-
+           save_snapshot(Repo, venue, record, :time_zone, :time_zone_last_updated_ticks) do
+      last_updated_ticks = Ticks.from_date_time(time_zone_record.inserted_at)
+
+      if Ticks.compare(last_updated_ticks, venue.time_zone_last_updated_ticks) == :gt do
+        message = build_venue_time_zone_changed(venue, time_zone_record)
+        BusDriver.publish(:promotions, message)
+      end
+
+      {:ok, time_zone_record}
+    end
+  end
+
+  defp build_venue_time_zone_changed(venue, time_zone_record) do
+    venue_time_zone_representation = %Messages.Representations.VenueTimeZone{
+      time_zone: time_zone_record.time_zone
+    }
+
+    %Messages.Events.VenueTimeZoneChanged{
+      venue_id: venue.id,
+      venue_time_zone_representation: venue_time_zone_representation
+    }
   end
 
   defp get_record!(venue_uuid) do

@@ -27,7 +27,7 @@ defmodule GloboTicket.Promotions.IndexerTest do
   test "when act description changed after show is added then show is updated" do
     show_added =
       given_show_added(%{
-        act: %{title: "Original Title"}
+        act: %{title: "Original Title", description_age: 1}
       })
 
     act_description_changed =
@@ -45,18 +45,10 @@ defmodule GloboTicket.Promotions.IndexerTest do
   end
 
   def given_show_added(attrs) do
-    act_description_attrs =
-      attrs
-      |> Map.get(:act, %{})
-      |> Map.take([:title])
+    act_attrs = Map.get(attrs, :act, %{})
+    act_description_representation = given_act_description(act_attrs)
 
-    act_description_representation =
-      Acts.Controls.Messages.Representations.ActDescription.generate(act_description_attrs)
-
-    act_attrs =
-      attrs
-      |> Map.get(:act, %{})
-      |> Map.take([:act_id])
+    act_attrs = Map.take(act_attrs, [:act_id])
 
     act_representation =
       act_attrs
@@ -80,21 +72,29 @@ defmodule GloboTicket.Promotions.IndexerTest do
   end
 
   def given_act_description_changed(attrs) do
-    act_description_attrs =
-      attrs
-      |> Map.get(:act, %{})
-      |> Map.take([:title])
+    attrs = Map.get(attrs, :act, %{})
 
-    act_description_representation =
-      Acts.Controls.Messages.Representations.ActDescription.generate(act_description_attrs)
+    act_description_representation = given_act_description(attrs)
 
-    act_attrs =
-      attrs
-      |> Map.get(:act, %{})
-      |> Map.take([:act_id])
+    attrs = Map.take(attrs, [:act_id])
 
-    act_attrs
+    attrs
     |> Map.merge(%{act_description_representation: act_description_representation})
     |> Acts.Controls.Messages.Events.ActDescriptionChanged.generate()
+  end
+
+  def given_actiption(attrs) do
+    attrs = Map.take(attrs, [:title])
+    Acts.Controls.Messages.Representations.ActDescription.generate(attrs)
+  end
+
+  def given_act_description(attrs) do
+    description_attrs = Map.take(attrs, [:title])
+    days = Map.get(attrs, :description_age, 0)
+    modified_date = Clock.Controls.DateTime.age({days, :days})
+
+    description_attrs
+    |> Map.put(:modified_date, modified_date)
+    |> Acts.Controls.Messages.Representations.ActDescription.generate()
   end
 end

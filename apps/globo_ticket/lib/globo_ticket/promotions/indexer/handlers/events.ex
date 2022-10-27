@@ -3,6 +3,7 @@ defmodule GloboTicket.Promotions.Indexer.Handlers.Events do
 
   use GloboTicket.EventHandler
 
+  alias GloboTicket.Promotions.Acts
   alias GloboTicket.Promotions.Shows
 
   alias GloboTicket.Promotions.Indexer.Records
@@ -19,5 +20,12 @@ defmodule GloboTicket.Promotions.Indexer.Handlers.Events do
       venue_longitude: event.venue_representation.venue_location_representation.longitude
     }
     |> Repo.insert()
+  end
+
+  def handle(%Acts.Messages.Events.ActDescriptionChanged{} = event) do
+    query = from(show in Records.Show, where: show.act_uuid == ^event.act_id)
+    result = Repo.update_all(query, set: [act_title: event.act_description_representation.title])
+
+    {:ok, result}
   end
 end

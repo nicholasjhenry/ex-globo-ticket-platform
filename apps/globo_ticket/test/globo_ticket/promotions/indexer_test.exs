@@ -44,6 +44,26 @@ defmodule GloboTicket.Promotions.IndexerTest do
     assert show.act_title == "Modified Title"
   end
 
+  test "when act description changed arrives before show is added then show uses the latest description" do
+    show_added =
+      given_show_added(%{
+        act: %{title: "Original Title", description_age: 1}
+      })
+
+    act_description_changed =
+      given_act_description_changed(%{
+        act: %{act_id: show_added.act_representation.act_id, title: "Modified Title"}
+      })
+
+    {:ok, _record} = Handlers.Events.handle(act_description_changed)
+    {:ok, _record} = Handlers.Events.handle(show_added)
+
+    show = Repo.one(Records.Show)
+
+    assert show
+    assert show.act_title == "Modified Title"
+  end
+
   def given_show_added(attrs) do
     act_attrs = Map.get(attrs, :act, %{})
     act_description_representation = given_act_description(act_attrs)

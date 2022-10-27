@@ -3,7 +3,7 @@ defmodule GloboTicket.Promotions.Indexer.Records.Show do
 
   use GloboTicket.Record
 
-  schema "promotion_show_index" do
+  schema "promotion_indexer_shows" do
     field :act_uuid, Ecto.UUID
     field :venue_uuid, Ecto.UUID
     field :act_title, :string

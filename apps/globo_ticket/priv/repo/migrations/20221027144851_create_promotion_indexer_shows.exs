@@ -1,8 +1,8 @@
-defmodule GloboTicket.Repo.Migrations.CreatePromotionShowsIndex do
+defmodule GloboTicket.Repo.Migrations.CreatePromotionIndexerShows do
   use Ecto.Migration
 
   def change do
-    create table(:promotion_show_index) do
+    create table(:promotion_indexer_shows) do
       add :act_uuid, :uuid, null: false
       add :venue_uuid, :uuid, null: false
       add :start_at, :utc_datetime_usec, null: false
@@ -15,9 +15,9 @@ defmodule GloboTicket.Repo.Migrations.CreatePromotionShowsIndex do
       timestamps()
     end
 
-    create unique_index(:promotion_show_index, [:act_uuid, :venue_uuid, :start_at])
-    create index(:promotion_show_index, :act_title)
-    create index(:promotion_show_index, :venue_name)
-    create index(:promotion_show_index, [:venue_latitude, :venue_longitude])
+    create unique_index(:promotion_indexer_shows, [:act_uuid, :venue_uuid, :start_at])
+    create index(:promotion_indexer_shows, :act_title)
+    create index(:promotion_indexer_shows, :venue_name)
+    create index(:promotion_indexer_shows, [:venue_latitude, :venue_longitude])
   end
 end

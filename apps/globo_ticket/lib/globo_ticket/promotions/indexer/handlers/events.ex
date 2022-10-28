@@ -17,6 +17,20 @@ defmodule GloboTicket.Promotions.Indexer.Handlers.Events do
         act_representation.act_description_representation
       )
 
+    insert_show(event, act_description_record)
+  end
+
+  def handle(%Acts.Messages.Events.ActDescriptionChanged{} = event) do
+    act_description_record =
+      maybe_upsert_act_description(event.act_id, event.act_description_representation)
+
+    query = from(show in Records.Show, where: show.act_uuid == ^act_description_record.act_uuid)
+    result = Repo.update_all(query, set: [act_title: act_description_record.title])
+
+    {:ok, result}
+  end
+
+  defp insert_show(event, act_description_record) do
     venue_description_representation = event.venue_representation.venue_description_representation
     venue_location_representation = event.venue_representation.venue_location_representation
 
@@ -31,16 +45,6 @@ defmodule GloboTicket.Promotions.Indexer.Handlers.Events do
       venue_longitude: venue_location_representation.longitude
     }
     |> Repo.insert()
-  end
-
-  def handle(%Acts.Messages.Events.ActDescriptionChanged{} = event) do
-    act_description_record =
-      maybe_upsert_act_description(event.act_id, event.act_description_representation)
-
-    query = from(show in Records.Show, where: show.act_uuid == ^act_description_record.act_uuid)
-    result = Repo.update_all(query, set: [act_title: act_description_record.title])
-
-    {:ok, result}
   end
 
   defp maybe_upsert_act_description(act_uuid, act_description_representation) do

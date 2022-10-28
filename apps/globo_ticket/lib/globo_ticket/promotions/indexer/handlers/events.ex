@@ -25,7 +25,13 @@ defmodule GloboTicket.Promotions.Indexer.Handlers.Events do
         venue_representation.venue_description_representation
       )
 
-    insert_show(event, act_description_record, venue_description_record)
+    venue_location_record =
+      maybe_upsert_venue_location(
+        venue_representation.venue_id,
+        venue_representation.venue_location_representation
+      )
+
+    insert_show(event, act_description_record, venue_description_record, venue_location_record)
   end
 
   def handle(%Acts.Messages.Events.ActDescriptionChanged{} = event) do
@@ -68,9 +74,7 @@ defmodule GloboTicket.Promotions.Indexer.Handlers.Events do
     {:ok, result}
   end
 
-  defp insert_show(event, act_description_record, venue_description_record) do
-    venue_location_representation = event.venue_representation.venue_location_representation
-
+  defp insert_show(event, act_description_record, venue_description_record, venue_location_record) do
     %Records.Show{
       act_uuid: event.act_representation.act_id,
       venue_uuid: event.venue_representation.venue_id,
@@ -78,8 +82,8 @@ defmodule GloboTicket.Promotions.Indexer.Handlers.Events do
       act_title: act_description_record.title,
       act_image_hash: act_description_record.image_hash,
       venue_name: venue_description_record.name,
-      venue_latitude: venue_location_representation.latitude,
-      venue_longitude: venue_location_representation.longitude
+      venue_latitude: venue_location_record.latitude,
+      venue_longitude: venue_location_record.longitude
     }
     |> Repo.insert()
   end

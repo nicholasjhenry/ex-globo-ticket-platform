@@ -84,7 +84,7 @@ defmodule GloboTicket.Promotions.IndexerTest do
     assert show.venue_name == "Modified Name"
   end
 
-  test "when venue description chnage arrives before show added then show uses latest description" do
+  test "when venue description change arrives before show added then show uses latest description" do
     show_added =
       given_show_added(%{
         venue: %{name: "Original Name", description_age: 1}
@@ -107,7 +107,7 @@ defmodule GloboTicket.Promotions.IndexerTest do
   test "when venue location is changed after show is added then show is updated" do
     show_added =
       given_show_added(%{
-        venue: %{latitude: 0.1, longitude: 0.2, description_age: 1}
+        venue: %{latitude: 0.1, longitude: 0.2, location_age: 1}
       })
 
     venue_location_changed =
@@ -129,6 +129,31 @@ defmodule GloboTicket.Promotions.IndexerTest do
     assert show.venue_longitude == 0.4
   end
 
+  test "when venue location change arrives before show added then show uses latest location" do
+    show_added =
+      given_show_added(%{
+        venue: %{latitude: 0.1, longitude: 0.2, location_age: 1}
+      })
+
+    venue_location_changed =
+      given_venue_location_changed(%{
+        venue: %{
+          venue_id: show_added.venue_representation.venue_id,
+          latitude: 0.3,
+          longitude: 0.4
+        }
+      })
+
+    {:ok, _record} = Handlers.Events.handle(venue_location_changed)
+    {:ok, _record} = Handlers.Events.handle(show_added)
+
+    show = Repo.one(Records.Show)
+
+    assert show
+    assert show.venue_latitude == 0.3
+    assert show.venue_longitude == 0.4
+  end
+
   def given_show_added(attrs) do
     act_attrs = Map.get(attrs, :act, %{})
     act_description_representation = given_act_description(act_attrs)
@@ -142,10 +167,12 @@ defmodule GloboTicket.Promotions.IndexerTest do
 
     venue_attrs = Map.get(attrs, :venue, %{})
     venue_description_representation = given_venue_description(venue_attrs)
+    venue_location_representation = given_venue_location(venue_attrs)
 
     venue_representation =
       Venues.Controls.Messages.Representations.Venue.generate(
-        venue_description_representation: venue_description_representation
+        venue_description_representation: venue_description_representation,
+        venue_location_representation: venue_location_representation
       )
 
     Shows.Controls.Messages.Events.ShowAdded.generate(
@@ -204,7 +231,7 @@ defmodule GloboTicket.Promotions.IndexerTest do
 
   def given_venue_location(attrs) do
     location_attrs = Map.take(attrs, [:latitude, :longitude])
-    days = Map.get(attrs, :description_age, 0)
+    days = Map.get(attrs, :location_age, 0)
     modified_date = Clock.Controls.DateTime.age({days, :days})
 
     location_attrs

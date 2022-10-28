@@ -5,6 +5,7 @@ defmodule GloboTicket.Promotions.Indexer.Handlers.Events do
 
   alias GloboTicket.Promotions.Acts
   alias GloboTicket.Promotions.Shows
+  alias GloboTicket.Promotions.Venues
 
   alias GloboTicket.Promotions.Indexer.Records
 
@@ -26,6 +27,18 @@ defmodule GloboTicket.Promotions.Indexer.Handlers.Events do
 
     query = from(show in Records.Show, where: show.act_uuid == ^act_description_record.act_uuid)
     result = Repo.update_all(query, set: [act_title: act_description_record.title])
+
+    {:ok, result}
+  end
+
+  def handle(%Venues.Messages.Events.VenueDescriptionChanged{} = event) do
+    venue_description_record =
+      maybe_upsert_venue_description(event.venue_id, event.venue_description_representation)
+
+    query =
+      from(show in Records.Show, where: show.venue_uuid == ^venue_description_record.venue_uuid)
+
+    result = Repo.update_all(query, set: [venue_name: venue_description_record.name])
 
     {:ok, result}
   end
@@ -74,6 +87,36 @@ defmodule GloboTicket.Promotions.Indexer.Handlers.Events do
     |> Repo.insert!(
       on_conflict: {:replace, [:title, :last_updated_at]},
       conflict_target: [:act_uuid]
+    )
+  end
+
+  defp maybe_upsert_venue_description(venue_uuid, venue_description_representation) do
+    record = Repo.get_by(Records.VenueDescription, venue_uuid: venue_uuid)
+
+    cond do
+      is_nil(record) ->
+        upsert_venue_description(venue_uuid, venue_description_representation)
+
+      record &&
+          DateTime.compare(venue_description_representation.modified_date, record.last_updated_at) ==
+            :gt ->
+        upsert_venue_description(venue_uuid, venue_description_representation)
+
+      true ->
+        record
+    end
+  end
+
+  defp upsert_venue_description(venue_uuid, venue_description_representation) do
+    %Records.VenueDescription{
+      venue_uuid: venue_uuid,
+      name: venue_description_representation.name,
+      city: venue_description_representation.city,
+      last_updated_at: venue_description_representation.modified_date
+    }
+    |> Repo.insert!(
+      on_conflict: {:replace, [:name, :city, :last_updated_at]},
+      conflict_target: [:venue_uuid]
     )
   end
 end

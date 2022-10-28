@@ -64,6 +64,26 @@ defmodule GloboTicket.Promotions.IndexerTest do
     assert show.act_title == "Modified Title"
   end
 
+  test "when venue description is changed after show is added then show is updated" do
+    show_added =
+      given_show_added(%{
+        venue: %{name: "Original Name", description_age: 1}
+      })
+
+    venue_description_changed =
+      given_venue_description_changed(%{
+        venue: %{venue_id: show_added.venue_representation.venue_id, name: "Modified Name"}
+      })
+
+    {:ok, _record} = Handlers.Events.handle(show_added)
+    {:ok, _record} = Handlers.Events.handle(venue_description_changed)
+
+    show = Repo.one(Records.Show)
+
+    assert show
+    assert show.venue_name == "Modified Name"
+  end
+
   def given_show_added(attrs) do
     act_attrs = Map.get(attrs, :act, %{})
     act_description_representation = given_act_description(act_attrs)
@@ -76,9 +96,7 @@ defmodule GloboTicket.Promotions.IndexerTest do
       |> Acts.Controls.Messages.Representations.Act.generate()
 
     venue_attrs = Map.get(attrs, :venue, %{})
-
-    venue_description_representation =
-      Venues.Controls.Messages.Representations.VenueDescription.generate(venue_attrs)
+    venue_description_representation = given_venue_description(venue_attrs)
 
     venue_representation =
       Venues.Controls.Messages.Representations.Venue.generate(
@@ -116,5 +134,26 @@ defmodule GloboTicket.Promotions.IndexerTest do
     description_attrs
     |> Map.put(:modified_date, modified_date)
     |> Acts.Controls.Messages.Representations.ActDescription.generate()
+  end
+
+  def given_venue_description(attrs) do
+    description_attrs = Map.take(attrs, [:name])
+    days = Map.get(attrs, :description_age, 0)
+    modified_date = Clock.Controls.DateTime.age({days, :days})
+
+    description_attrs
+    |> Map.put(:modified_date, modified_date)
+    |> Venues.Controls.Messages.Representations.VenueDescription.generate()
+  end
+
+  def given_venue_description_changed(attrs) do
+    attrs = Map.get(attrs, :venue, %{})
+    venue_description_representation = given_venue_description(attrs)
+
+    attrs = Map.take(attrs, [:venue_id])
+
+    attrs
+    |> Map.merge(%{venue_description_representation: venue_description_representation})
+    |> Venues.Controls.Messages.Events.VenueDescriptionChanged.generate()
   end
 end

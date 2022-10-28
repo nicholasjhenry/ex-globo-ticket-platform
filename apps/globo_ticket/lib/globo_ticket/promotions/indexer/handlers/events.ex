@@ -12,7 +12,7 @@ defmodule GloboTicket.Promotions.Indexer.Handlers.Events do
     act_representation = event.act_representation
 
     act_description_record =
-      maybe_insert_act_description(
+      maybe_upsert_act_description(
         act_representation.act_id,
         act_representation.act_description_representation
       )
@@ -35,7 +35,7 @@ defmodule GloboTicket.Promotions.Indexer.Handlers.Events do
 
   def handle(%Acts.Messages.Events.ActDescriptionChanged{} = event) do
     act_description_record =
-      maybe_insert_act_description(event.act_id, event.act_description_representation)
+      maybe_upsert_act_description(event.act_id, event.act_description_representation)
 
     query = from(show in Records.Show, where: show.act_uuid == ^act_description_record.act_uuid)
     result = Repo.update_all(query, set: [act_title: act_description_record.title])
@@ -43,24 +43,24 @@ defmodule GloboTicket.Promotions.Indexer.Handlers.Events do
     {:ok, result}
   end
 
-  defp maybe_insert_act_description(act_uuid, act_description_representation) do
+  defp maybe_upsert_act_description(act_uuid, act_description_representation) do
     record = Repo.get_by(Records.ActDescription, act_uuid: act_uuid)
 
     cond do
       is_nil(record) ->
-        insert_act_description(act_uuid, act_description_representation)
+        upsert_act_description(act_uuid, act_description_representation)
 
       record &&
           DateTime.compare(act_description_representation.modified_date, record.last_updated_at) ==
             :gt ->
-        insert_act_description(act_uuid, act_description_representation)
+        upsert_act_description(act_uuid, act_description_representation)
 
       true ->
         record
     end
   end
 
-  defp insert_act_description(act_uuid, act_description_representation) do
+  defp upsert_act_description(act_uuid, act_description_representation) do
     %Records.ActDescription{
       act_uuid: act_uuid,
       title: act_description_representation.title,

@@ -50,6 +50,24 @@ defmodule GloboTicket.Promotions.Indexer.Handlers.Events do
     {:ok, result}
   end
 
+  def handle(%Venues.Messages.Events.VenueLocationChanged{} = event) do
+    venue_location_record =
+      maybe_upsert_venue_location(event.venue_id, event.venue_location_representation)
+
+    query =
+      from(show in Records.Show, where: show.venue_uuid == ^venue_location_record.venue_uuid)
+
+    result =
+      Repo.update_all(query,
+        set: [
+          venue_latitude: venue_location_record.latitude,
+          venue_longitude: venue_location_record.longitude
+        ]
+      )
+
+    {:ok, result}
+  end
+
   defp insert_show(event, act_description_record, venue_description_record) do
     venue_location_representation = event.venue_representation.venue_location_representation
 
@@ -122,6 +140,36 @@ defmodule GloboTicket.Promotions.Indexer.Handlers.Events do
     }
     |> Repo.insert!(
       on_conflict: {:replace, [:name, :city, :last_updated_at]},
+      conflict_target: [:venue_uuid]
+    )
+  end
+
+  defp maybe_upsert_venue_location(venue_uuid, venue_location_representation) do
+    record = Repo.get_by(Records.VenueLocation, venue_uuid: venue_uuid)
+
+    cond do
+      is_nil(record) ->
+        upsert_venue_location(venue_uuid, venue_location_representation)
+
+      record &&
+          DateTime.compare(venue_location_representation.modified_date, record.last_updated_at) ==
+            :gt ->
+        upsert_venue_location(venue_uuid, venue_location_representation)
+
+      true ->
+        record
+    end
+  end
+
+  defp upsert_venue_location(venue_uuid, venue_location_representation) do
+    %Records.VenueLocation{
+      venue_uuid: venue_uuid,
+      latitude: venue_location_representation.latitude,
+      longitude: venue_location_representation.longitude,
+      last_updated_at: venue_location_representation.modified_date
+    }
+    |> Repo.insert!(
+      on_conflict: {:replace, [:latitude, :longitude, :last_updated_at]},
       conflict_target: [:venue_uuid]
     )
   end

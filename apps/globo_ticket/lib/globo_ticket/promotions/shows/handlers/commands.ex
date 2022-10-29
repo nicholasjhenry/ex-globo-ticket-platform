@@ -9,11 +9,7 @@ defmodule GloboTicket.Promotions.Shows.Handlers.Commands do
   def schedule_show(act_id, venue_id, start_at) do
     show_record = %Records.Show{act_uuid: act_id, venue_uuid: venue_id, start_at: start_at}
 
-    with {:ok, show_record} <-
-           Repo.insert(show_record,
-             on_conflict: :nothing,
-             conflict_target: [:act_uuid, :venue_uuid, :start_at]
-           ) do
+    with {:ok, show_record} <- upsert_show(show_record) do
       _ = Shows.Notifier.notify(show_record)
       {:ok, show_record}
     end
@@ -21,12 +17,7 @@ defmodule GloboTicket.Promotions.Shows.Handlers.Commands do
 
   def cancel_show(act_id, venue_id, start_at) do
     show_record = %Records.Show{act_uuid: act_id, venue_uuid: venue_id, start_at: start_at}
-
-    {:ok, show_record} =
-      Repo.insert(show_record,
-        on_conflict: {:replace, [:id]},
-        conflict_target: [:act_uuid, :venue_uuid, :start_at]
-      )
+    {:ok, show_record} = upsert_show(show_record)
 
     cancel_record = %Records.ShowCancelled{
       show_id: show_record.id,
@@ -37,5 +28,11 @@ defmodule GloboTicket.Promotions.Shows.Handlers.Commands do
       on_conflict: :nothing,
       conflict_target: [:show_id]
     )
+  end
+
+  defp upsert_show(show_record) do
+    show_record
+    |> Records.Show.hash()
+    |> Repo.insert(on_conflict: {:replace, [:hash]}, conflict_target: :hash)
   end
 end

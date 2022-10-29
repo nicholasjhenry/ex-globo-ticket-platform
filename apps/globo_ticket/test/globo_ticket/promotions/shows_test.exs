@@ -26,6 +26,19 @@ defmodule GloboTicket.Promotions.ShowsTest do
     assert Enum.any?(shows, &(Date.compare(&1.start_at, start_at) == :eq))
   end
 
+  test "when show is scheduled twice then only one show is returned" do
+    act_id = given_act()
+    venue_id = given_venue()
+
+    start_at = Clock.Controls.DateTime.example()
+    {:ok, _record} = Handlers.Commands.schedule_show(act_id, venue_id, start_at)
+    {:ok, _record} = Handlers.Commands.schedule_show(act_id, venue_id, start_at)
+
+    shows = Handlers.Queries.list_shows(act_id)
+
+    assert Enum.count(shows) == 1
+  end
+
   test "when show is scheduled then an event is published" do
     act_id = given_act()
     venue_id = given_venue()

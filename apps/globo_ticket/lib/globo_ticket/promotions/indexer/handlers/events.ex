@@ -31,7 +31,7 @@ defmodule GloboTicket.Promotions.Indexer.Handlers.Events do
         venue_representation.venue_location_representation
       )
 
-    insert_show(event, act_description_record, venue_description_record, venue_location_record)
+    upsert_show(event, act_description_record, venue_description_record, venue_location_record)
   end
 
   def handle(%Acts.Messages.Events.ActDescriptionChanged{} = event) do
@@ -74,7 +74,7 @@ defmodule GloboTicket.Promotions.Indexer.Handlers.Events do
     {:ok, result}
   end
 
-  defp insert_show(event, act_description_record, venue_description_record, venue_location_record) do
+  defp upsert_show(event, act_description_record, venue_description_record, venue_location_record) do
     %Records.Show{
       act_uuid: event.act_representation.act_id,
       venue_uuid: event.venue_representation.venue_id,

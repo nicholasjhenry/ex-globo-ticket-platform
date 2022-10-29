@@ -14,7 +14,7 @@ After configuring your application for Heroku, deployment uses the standard meth
 
 Deploy additional instances with:
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://dashboard.heroku.com/new?template=https://github.com/nicholasjhenry/globo-ticket-platform/tree/develop)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://dashboard.heroku.com/new?template=https://github.com/nicholasjhenry/globo-ticket-platform/tree/main)
 
 A manual deploy can be invoked from the Heroku interface under the "Deploy" tab of these instances:
 

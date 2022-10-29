@@ -85,7 +85,8 @@ defmodule GloboTicket.Promotions.Indexer.Handlers.Events do
       venue_latitude: venue_location_record.latitude,
       venue_longitude: venue_location_record.longitude
     }
-    |> Repo.insert()
+    |> Records.Show.hash()
+    |> Repo.insert(on_conflict: :nothing, conflict_target: [:hash])
   end
 
   defp maybe_upsert_act_description(act_uuid, act_description_representation) do

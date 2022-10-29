@@ -6,6 +6,7 @@ defmodule GloboTicket.Repo.Migrations.CreatePromotionIndexerShows do
       add :act_uuid, :uuid, null: false
       add :venue_uuid, :uuid, null: false
       add :start_at, :utc_datetime_usec, null: false
+      add :hash, :string, null: false
       add :act_title, :string, null: false
       add :act_image_hash, :string, null: false
       add :venue_name, :string, null: false
@@ -15,7 +16,9 @@ defmodule GloboTicket.Repo.Migrations.CreatePromotionIndexerShows do
       timestamps()
     end
 
-    create unique_index(:promotion_indexer_shows, [:act_uuid, :venue_uuid, :start_at])
+    create unique_index(:promotion_indexer_shows, :hash)
+    create index(:promotion_indexer_shows, :act_uuid)
+    create index(:promotion_indexer_shows, :venue_uuid)
     create index(:promotion_indexer_shows, :act_title)
     create index(:promotion_indexer_shows, :venue_name)
     create index(:promotion_indexer_shows, [:venue_latitude, :venue_longitude])

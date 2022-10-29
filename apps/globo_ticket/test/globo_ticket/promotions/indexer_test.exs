@@ -24,6 +24,17 @@ defmodule GloboTicket.Promotions.IndexerTest do
     assert show.venue_name == "Expected venue name"
   end
 
+  test "when show is added twice then one show is indexed" do
+    show_added = given_show_added()
+
+    {:ok, _record} = Handlers.Events.handle(show_added)
+    {:ok, _record} = Handlers.Events.handle(show_added)
+
+    shows = Repo.all(Records.Show)
+
+    assert Enum.count(shows) == 1
+  end
+
   test "when act description changed after show is added then show is updated" do
     show_added =
       given_show_added(%{
@@ -154,7 +165,7 @@ defmodule GloboTicket.Promotions.IndexerTest do
     assert show.venue_longitude == 0.4
   end
 
-  def given_show_added(attrs) do
+  def given_show_added(attrs \\ %{}) do
     act_attrs = Map.get(attrs, :act, %{})
     act_description_representation = given_act_description(act_attrs)
 

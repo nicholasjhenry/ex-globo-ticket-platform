@@ -10,6 +10,16 @@ defmodule Verity.Clock.Controls.DateTime do
     ~U[2000-01-01 00:00:00.000000Z]
   end
 
+  def generate do
+    unit = Enum.random(1..10_000)
+    add({unit, :days})
+  end
+
+  def add({unit, :days}) do
+    seconds = unit * 24 * 60 * 60
+    example() |> DateTime.add(seconds)
+  end
+
   def age({unit, :days}) do
     seconds = unit * 24 * 60 * 60
     example() |> DateTime.add(-seconds)

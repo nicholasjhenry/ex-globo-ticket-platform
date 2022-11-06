@@ -22,6 +22,7 @@ defmodule GloboTicket.Promotions.Acts.Controls.Act do
     defaults = %{
       id: Identifier.Uuid.Controls.Random.example(),
       title: Faker.Person.name(),
+      image: "/image_1.png",
       last_updated_ticks: Ticks.zero()
     }
 

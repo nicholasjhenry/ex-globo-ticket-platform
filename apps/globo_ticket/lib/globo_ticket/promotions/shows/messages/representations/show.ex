@@ -1,5 +1,6 @@
 defmodule GloboTicket.Promotions.Shows.Messages.Representations.Show do
   @moduledoc false
 
-  defstruct [:start_at]
+  @enforce_keys [:start_at]
+  defstruct @enforce_keys
 end

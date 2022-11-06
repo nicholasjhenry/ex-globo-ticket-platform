@@ -74,6 +74,10 @@ defmodule GloboTicket.Promotions.Indexer.Handlers.Events do
     {:ok, result}
   end
 
+  def handle(_event) do
+    {:ok, :noop}
+  end
+
   defp upsert_show(event, act_description_record, venue_description_record, venue_location_record) do
     %Records.Show{
       act_uuid: event.act_representation.act_id,

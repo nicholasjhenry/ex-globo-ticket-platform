@@ -165,6 +165,11 @@ defmodule GloboTicket.Promotions.IndexerTest do
     assert show.venue_longitude == 0.4
   end
 
+  test "when unknown event published then is handled with noop" do
+    result = Handlers.Events.handle(:unknown)
+    assert {:ok, :noop} == result
+  end
+
   def given_show_added(attrs \\ %{}) do
     act_attrs = Map.get(attrs, :act, %{})
     act_description_representation = given_act_description(act_attrs)

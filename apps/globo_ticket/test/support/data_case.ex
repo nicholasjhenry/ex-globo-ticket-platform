@@ -8,6 +8,7 @@ defmodule GloboTicket.DataCase do
   using do
     quote do
       alias GloboTicket.Repo
+      alias Verity.Clock
 
       import Ecto
       import Ecto.Changeset

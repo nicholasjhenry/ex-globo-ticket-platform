@@ -3,6 +3,7 @@ defmodule GloboTicket.Promotions.Shows.Records.Show do
 
   use GloboTicket.Record
 
+  alias GloboTicket.Ext
   alias GloboTicket.Promotions.Shows
   alias GloboTicket.Promotions.Venues
 
@@ -14,10 +15,20 @@ defmodule GloboTicket.Promotions.Shows.Records.Show do
       references: :uuid,
       type: Ecto.UUID
 
+    field :start_at, :utc_datetime_usec
+    field :hash, :string
+
     has_one :cancellation, Shows.Records.ShowCancelled
 
-    field :start_at, :utc_datetime_usec
-
     timestamps(updated_at: false)
+  end
+
+  def hash(show) do
+    hash =
+      show
+      |> Map.take([:act_uuid, :venue_uuid, :start_at])
+      |> Ext.Map.to_hash()
+
+    %{show | hash: hash}
   end
 end

@@ -49,7 +49,8 @@ defmodule GloboTicket.Promotions.Venues.Notifier do
   defp build_venue_location_changed(venue, location_record) do
     venue_location_representation = %Messages.Representations.VenueLocation{
       latitude: location_record.latitude,
-      longitude: location_record.longitude
+      longitude: location_record.longitude,
+      modified_date: location_record.inserted_at
     }
 
     %Messages.Events.VenueLocationChanged{
@@ -60,7 +61,8 @@ defmodule GloboTicket.Promotions.Venues.Notifier do
 
   defp build_venue_time_zone_changed(venue, time_zone_record) do
     venue_time_zone_representation = %Messages.Representations.VenueTimeZone{
-      time_zone: time_zone_record.time_zone
+      time_zone: time_zone_record.time_zone,
+      modified_date: time_zone_record.inserted_at
     }
 
     %Messages.Events.VenueTimeZoneChanged{

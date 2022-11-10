@@ -7,8 +7,7 @@ config :globo_ticket, GloboTicket.Repo, migration_timestamps: [type: :utc_dateti
 
 config :bus_driver,
   handlers: [
-    # Example
-    # {"subscriptions", Handlers.Events}
+    {:promotions, GloboTicket.Promotions.Indexer.Handlers.Events}
   ]
 
 config :globo_ticket, GloboTicket.Mailer, adapter: Swoosh.Adapters.Local

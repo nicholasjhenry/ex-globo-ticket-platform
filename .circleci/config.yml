@@ -7,7 +7,7 @@ defaults: &defaults
 
 aliases:
   - &elixir_container
-    image: cimg/elixir:1.14.0
+    image: cimg/elixir:1.14.1
   - &postgres_container
     image: cimg/postgres:14.4
     environment:
